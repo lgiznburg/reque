@@ -1,0 +1,5 @@
+﻿CREATE DATABASE reque
+    WITH
+    OWNER = leonid
+    ENCODING = 'UTF8'
+    CONNECTION LIMIT = -1;
