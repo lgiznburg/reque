@@ -1,0 +1,93 @@
+package ru.rsmu.reque.model.registration;
+
+import org.hibernate.validator.constraints.NotBlank;
+import ru.rsmu.reque.model.system.ApplianceType;
+import ru.rsmu.reque.model.system.User;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * @author leonid.
+ */
+@Entity
+@Table(name = "appointments")
+@org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
+public class Appointment implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = "scheduled_date")
+    @Temporal( TemporalType.DATE )
+    @NotNull
+    private Date scheduledDate;
+
+    @Column(name = "scheduled_time")
+    @Temporal( TemporalType.TIME )
+    @NotNull
+    private Date scheduledTime;
+
+    @Column(name = "online_number")
+    @NotBlank
+    private String onlineNumber;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private ApplianceType type;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId( long id ) {
+        this.id = id;
+    }
+
+    public Date getScheduledDate() {
+        return scheduledDate;
+    }
+
+    public void setScheduledDate( Date scheduledDate ) {
+        this.scheduledDate = scheduledDate;
+    }
+
+    public Date getScheduledTime() {
+        return scheduledTime;
+    }
+
+    public void setScheduledTime( Date scheduledTime ) {
+        this.scheduledTime = scheduledTime;
+    }
+
+    public String getOnlineNumber() {
+        return onlineNumber;
+    }
+
+    public void setOnlineNumber( String onlineNumber ) {
+        this.onlineNumber = onlineNumber;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser( User user ) {
+        this.user = user;
+    }
+
+    public ApplianceType getType() {
+        return type;
+    }
+
+    public void setType( ApplianceType type ) {
+        this.type = type;
+    }
+}

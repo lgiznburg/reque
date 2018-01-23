@@ -6,5 +6,6 @@ package ru.rsmu.reque.model.system;
 public enum StoredPropertyType {
     STRING,
     INTEGER,
-    DATE;
+    DATE,
+    TIME;
 }

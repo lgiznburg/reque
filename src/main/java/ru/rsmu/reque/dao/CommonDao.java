@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,7 +13,8 @@ import java.util.Objects;
 /**
  * @author leonid.
  */
-public class CommonDao extends HibernateDaoSupport {
+@Repository
+public abstract class CommonDao extends HibernateDaoSupport {
 
     @Autowired
     public void setPersistentResource( SessionFactory sessionFactory ) {

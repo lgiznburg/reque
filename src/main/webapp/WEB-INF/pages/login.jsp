@@ -38,7 +38,7 @@
 </head>
 <body onload='document.loginForm.j_username.focus();'>
 
-<h1>Spring Security Custom Login Form (XML)</h1>
+<%--<h1>Spring Security Custom Login Form (XML)</h1>--%>
 
 <div id="login-box">
 
@@ -57,11 +57,11 @@
     <table>
       <tr>
         <td>Email:</td>
-        <td><input type='text' name='j_username' value=''></td>
+        <td><input type='text' id="j_username" name='j_username' value=''></td>
       </tr>
       <tr>
         <td>Password:</td>
-        <td><input type='password' name='j_password' /></td>
+        <td><input type='password' id="j_password" name='j_password' /></td>
       </tr>
       <tr>
         <td colspan='2'><input name="submit" type="submit"
@@ -69,8 +69,7 @@
       </tr>
     </table>
 
-    <input type="hidden" name="${_csrf.parameterName}"
-           value="${_csrf.token}" />
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
   </form>
 </div>

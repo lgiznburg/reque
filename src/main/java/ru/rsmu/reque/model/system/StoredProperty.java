@@ -22,6 +22,14 @@ public class StoredProperty implements Serializable, Comparable<StoredProperty> 
     @Column
     private String value;
 
+    public StoredProperty() {
+    }
+
+    public StoredProperty( StoredPropertyName propertyName, String value ) {
+        this.propertyName = propertyName;
+        this.value = value;
+    }
+
     public long getId() {
         return id;
     }

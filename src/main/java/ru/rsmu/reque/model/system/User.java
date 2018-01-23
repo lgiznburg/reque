@@ -1,5 +1,8 @@
 package ru.rsmu.reque.model.system;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -22,12 +25,17 @@ public class User implements UserDetails, Serializable {
     private long id;
 
     @Column
+    @NotBlank
+    @Email
     private String username;
 
     @Column
     private String password;
 
-    @ManyToMany
+    @Transient
+    private String passwordConfirmation;
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable( name = "user_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
@@ -44,10 +52,15 @@ public class User implements UserDetails, Serializable {
     private Date lastUpdated;
 
     @Column(name = "first_name")
+    @NotBlank
     private String firstName;
 
     @Column(name = "last_name")
+    @NotBlank
     private String lastName;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -142,5 +155,21 @@ public class User implements UserDetails, Serializable {
 
     public void setLastName( String lastName ) {
         this.lastName = lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber( String phoneNumber ) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPasswordConfirmation() {
+        return passwordConfirmation;
+    }
+
+    public void setPasswordConfirmation( String passwordConfirmation ) {
+        this.passwordConfirmation = passwordConfirmation;
     }
 }

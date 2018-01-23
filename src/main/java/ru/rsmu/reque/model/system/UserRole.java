@@ -18,7 +18,7 @@ public class UserRole implements GrantedAuthority, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "role_name")
+    @Column(name = "name")
     @Enumerated(EnumType.STRING)
     private UserRoleName roleName;
 

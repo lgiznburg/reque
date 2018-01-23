@@ -7,10 +7,11 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven ignore-default-model-on-redirect="true"/>
     <context:annotation-config/>
     <context:component-scan base-package="ru.rsmu.reque.actions"/>
-    <!--<context:component-scan base-package="ru.rsmu.reque.service"/>-->
+    <context:component-scan base-package="ru.rsmu.reque.service"/>
+    <context:component-scan base-package="ru.rsmu.reque.validators"/>
 
     <!-- the interseptor to keep the session open to avoid lazy initialization problems -->
     <bean name="openSessionInViewInterceptor" class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
@@ -24,6 +25,8 @@
         <mvc:jsp prefix="/WEB-INF/pages" suffix=".jsp" view-class="org.springframework.web.servlet.view.JstlView"/>
     </mvc:view-resolvers>
 
+    <mvc:resources mapping="/resources/**" location="/resources/" cache-period="31556926"/>
+
     <!-- annotation-based handler -->
     <bean id="annotationMapping" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
         <property name="order" value="1"/>
@@ -33,6 +36,23 @@
                 <ref bean="openSessionInViewInterceptor"/>
             </list>
         </property>
+    </bean>
+
+    <bean id="messageSource"
+          class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>messages</value>
+            </list>
+        </property>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+    <!-- Annotation driven validator factory. Default implementation of JSR-303
+        bean validation API -->
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="validationMessageSource" ref="messageSource" />
     </bean>
 
 </beans>
