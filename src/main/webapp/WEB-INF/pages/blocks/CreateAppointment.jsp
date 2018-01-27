@@ -67,6 +67,7 @@
   <div class="bd">
     <form:form commandName="appointment" name="appointment" method="post" action="CreateAppointment.htm">
       <form:hidden path="id"/>
+      <form:hidden path="campaign"/>
       <table>
         <tr>
           <th>Online Code:</th>

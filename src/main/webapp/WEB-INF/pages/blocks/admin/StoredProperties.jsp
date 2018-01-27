@@ -28,9 +28,19 @@
           </td>
           <td>
             <c:url value="/admin/StoredPropertyEdit.htm" var="editUrl"><c:param name="propertyName" value="${storedProperty.propertyName}"/></c:url>
-            <a href="${editUrl}">${storedProperty.propertyName.name}</a>
+            <c:choose>
+              <c:when test="${storedProperty.propertyName.editable}"><a href="${editUrl}">${storedProperty.propertyName.name}</a></c:when>
+              <c:otherwise>${storedProperty.propertyName.name}</c:otherwise>
+            </c:choose>
+
           </td>
-          <td><a href="${editUrl}">${storedProperty.value}</a></td>
+          <td>
+            <c:choose>
+              <c:when test="${storedProperty.propertyName.editable}"><a href="${editUrl}">${storedProperty.value}</a></c:when>
+              <c:otherwise>${storedProperty.value}</c:otherwise>
+            </c:choose>
+
+          </td>
         </tr>
       </c:forEach>
     </table>

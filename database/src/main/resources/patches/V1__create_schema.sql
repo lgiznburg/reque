@@ -154,11 +154,42 @@ WITH (
 OIDS = FALSE
 );
 
+CREATE TABLE public.reception_campaigns
+(
+  id bigserial NOT NULL,
+  name character varying(255) NOT NULL,
+  start_date date NOT NULL,
+  end_date date NOT NULL,
+  active BOOLEAN DEFAULT TRUE,
+  PRIMARY KEY (id)
+)
+WITH (
+OIDS = FALSE
+);
+
+CREATE TABLE public.campaign_appliances
+(
+  campaign_id bigint NOT NULL,
+  appliance_type_id bigint NOT NULL,
+  CONSTRAINT fk_ca_campaigns FOREIGN KEY (campaign_id)
+  REFERENCES public.reception_campaigns (id) MATCH SIMPLE
+  ON UPDATE NO ACTION
+  ON DELETE NO ACTION,
+  CONSTRAINT fk_ca_appliances FOREIGN KEY (appliance_type_id)
+  REFERENCES public.appliance_types (id) MATCH SIMPLE
+  ON UPDATE NO ACTION
+  ON DELETE NO ACTION
+)
+WITH (
+OIDS = FALSE
+);
+
 CREATE TABLE public.appointments
 (
   id bigserial NOT NULL,
   client_id bigint,
   type_id bigint,
+  campaign_id BIGINT,
   online_number character varying(255) DEFAULT '',
   scheduled_date date NOT NULL,
   scheduled_time time without time zone NOT NULL,
@@ -166,6 +197,10 @@ CREATE TABLE public.appointments
   PRIMARY KEY (id),
   CONSTRAINT fk_appointments_appliance_types FOREIGN KEY (type_id)
   REFERENCES public.appliance_types (id) MATCH SIMPLE
+  ON UPDATE NO ACTION
+  ON DELETE NO ACTION,
+  CONSTRAINT fk_appointments_campaignss FOREIGN KEY (campaign_id)
+  REFERENCES public.reception_campaigns (id) MATCH SIMPLE
   ON UPDATE NO ACTION
   ON DELETE NO ACTION,
   CONSTRAINT fk_appointments_users FOREIGN KEY (client_id)

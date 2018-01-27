@@ -6,15 +6,15 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import ru.rsmu.reque.actions.BaseController;
 import ru.rsmu.reque.dao.AppointmentDao;
+import ru.rsmu.reque.dao.ReceptionCampaignDao;
 import ru.rsmu.reque.editor.ApplianceTypeEditor;
 import ru.rsmu.reque.editor.DateTimeEditor;
+import ru.rsmu.reque.editor.ReceptionCampaignEditor;
 import ru.rsmu.reque.model.registration.Appointment;
+import ru.rsmu.reque.model.registration.ReceptionCampaign;
 import ru.rsmu.reque.model.system.ApplianceType;
 import ru.rsmu.reque.model.system.StoredPropertyName;
 import ru.rsmu.reque.model.system.User;
@@ -36,15 +36,27 @@ public class CreateAppointment extends BaseController {
     @Autowired
     private AppointmentDao appointmentDao;
 
+    @Autowired
+    private ReceptionCampaignDao campaignDao;
+
     public CreateAppointment() {
-        setTitle( "Create Appointment" );
+        setTitle( "Определить дату визита" );
         setContent( "/WEB-INF/pages/blocks/CreateAppointment.jsp" );
     }
 
     @ModelAttribute("availableDates")
-    public List<Map<String, Object>> getAvailableDates() {
-        Date startDate = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_START_SERVICE_DATE );
-        Date endDate = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_END_SERVICE_DATE );
+    public List<Map<String, Object>> getAvailableDates( ModelMap model,
+                                                        @RequestParam(value = "campaign", required = false) ReceptionCampaign campaign ) {
+        Appointment appointment = (Appointment) model.get( "appointment" );
+        if ( appointment == null ) {
+            appointment = getAppointment( campaign );
+        }
+        if ( appointment == null || appointment.getCampaign() == null ) {
+            return Collections.emptyList();
+        }
+
+        Date startDate = appointment.getCampaign().getStartDate();
+        Date endDate = appointment.getCampaign().getEndDate();
 
         Calendar calendar = Calendar.getInstance();
         calendar.set( Calendar.HOUR_OF_DAY, 0 );
@@ -83,16 +95,33 @@ public class CreateAppointment extends BaseController {
     }
 
     @ModelAttribute("startDate")
-    public Date getStartDate() {
-        Date startDate = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_START_SERVICE_DATE );
+    public Date getStartDate( ModelMap model,
+                              @RequestParam(value = "campaign", required = false) ReceptionCampaign campaign ) {
         Calendar calendar = Calendar.getInstance();
         calendar.add( Calendar.DAY_OF_YEAR, 1 );
+
+        Appointment appointment = (Appointment) model.get( "appointment" );
+        if ( appointment == null ) {
+            appointment = getAppointment( campaign );
+        }
+        if ( appointment == null || appointment.getCampaign() == null ) {
+            return calendar.getTime();
+        }
+        Date startDate = appointment.getCampaign().getStartDate();
         return startDate.before( calendar.getTime() ) ? calendar.getTime() : startDate;
     }
 
     @ModelAttribute("endDate")
-    public Date getEndDate() {
-        return propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_END_SERVICE_DATE );
+    public Date getEndDate( ModelMap model,
+                            @RequestParam(value = "campaign", required = false) ReceptionCampaign campaign ) {
+        Appointment appointment = (Appointment) model.get( "appointment" );
+        if ( appointment == null ) {
+            appointment = getAppointment( campaign );
+        }
+        if ( appointment == null || appointment.getCampaign() == null ) {
+            return new Date();
+        }
+        return appointment.getCampaign().getEndDate();
     }
 
     @ModelAttribute("granularity")
@@ -111,23 +140,44 @@ public class CreateAppointment extends BaseController {
     }
 
     @ModelAttribute("appointment")
-    public Appointment getAppointment() {
-        return new Appointment();
+    public Appointment getAppointment( @RequestParam(value = "campaign", required = false) ReceptionCampaign campaign ) {
+        User user = getUser();
+        Date dateNow = new Date();
+        Appointment appointment = appointmentDao.findAppointment( user, dateNow );
+        if ( appointment == null ) {
+            appointment = new Appointment();
+            appointment.setCampaign( campaign );
+        }
+
+        return appointment;
     }
 
     @ModelAttribute("applianceTypes")
-    public List<ApplianceType> getApplianceTypes() {
-        return appointmentDao.findAllApplianceTypes();
+    public List<ApplianceType> getApplianceTypes( ModelMap model,
+                                                  @RequestParam(value = "campaign", required = false) ReceptionCampaign campaign ) {
+        Appointment appointment = (Appointment) model.get( "appointment" );
+        if ( appointment == null ) {
+            appointment = getAppointment( campaign );
+        }
+        if ( appointment == null || appointment.getCampaign() == null ) {
+            return Collections.emptyList();
+        }
+        return appointment.getCampaign().getAvailableTypes();
     }
 
     @InitBinder
     public void initBinder( WebDataBinder binder ) {
         binder.registerCustomEditor( Date.class, new DateTimeEditor() );
         binder.registerCustomEditor( ApplianceType.class, new ApplianceTypeEditor( appointmentDao ) );
+        binder.registerCustomEditor( ReceptionCampaign.class, new ReceptionCampaignEditor( campaignDao ) );
     }
 
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.HEAD})
-    public String showPage( ModelMap model ) {
+    public String showPage( ModelMap model,
+                            @ModelAttribute("appointment") Appointment appointment) {
+        if ( appointment.getCampaign() == null ) {
+            return "redirect:/SelectCampaign.htm";
+        }
         return buildModel( model );
     }
 

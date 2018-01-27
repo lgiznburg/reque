@@ -42,7 +42,11 @@ public class StoredPropertyEdit extends BaseController {
     }
 
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.HEAD} )
-    public String showPage( ModelMap model ) {
+    public String showPage( ModelMap model,
+                            @RequestParam("propertyName")StoredPropertyName propertyName ) {
+        if ( ! propertyName.isEditable() ) {
+            return "redirect:/admin/StoredProperties.htm";
+        }
         return buildModel( model );
     }
 

@@ -56,7 +56,7 @@ public class Registration extends BaseController {
                 userToReg, userToReg.getPassword(), userToReg.getAuthorities() );
         SecurityContextHolder.getContext().setAuthentication( t );
 
-        return "redirect:/CreateAppointment.htm";
+        return "redirect:/SelectCampaign.htm";
     }
 
     @InitBinder

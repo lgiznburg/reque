@@ -41,7 +41,13 @@ public class Appointment implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "type_id")
+    @NotNull
     private ApplianceType type;
+
+    @ManyToOne
+    @JoinColumn(name = "campaign_id")
+    @NotNull
+    private ReceptionCampaign campaign;
 
     public long getId() {
         return id;
@@ -89,5 +95,13 @@ public class Appointment implements Serializable {
 
     public void setType( ApplianceType type ) {
         this.type = type;
+    }
+
+    public ReceptionCampaign getCampaign() {
+        return campaign;
+    }
+
+    public void setCampaign( ReceptionCampaign campaign ) {
+        this.campaign = campaign;
     }
 }

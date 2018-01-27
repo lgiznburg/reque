@@ -28,6 +28,7 @@
         <tr>
           <td><a href="<c:url value="/admin/StoredProperties.htm"/>">Настройки</a></td>
           <td><a href="<c:url value="/admin/ApplianceTypes.htm"/> ">Типы заявлений</a> </td>
+          <td><a href="<c:url value="/admin/Campaigns.htm"/> ">Приемные кампании</a> </td>
           <td><a href="<c:url value="/admin/Statistics.htm"/> ">Статистика</a> </td>
         </tr>
       </table>
