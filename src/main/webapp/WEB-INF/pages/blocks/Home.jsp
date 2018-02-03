@@ -12,23 +12,21 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<div id="content" style="align-content: center; clear: both;">
-  <div><h2>Предварительная запись на подачу заявления.</h2></div>
+<h2>Предварительная запись на подачу заявления.</h2>
 
   <sec:authorize access="isAnonymous()">
-    <p>Для подачи заявления необходимо <a href="<c:url value="Registration.htm"/> ">зарегистрироваться</a> </p>
+    <p>Для подачи заявления необходимо <a class="btn btn-primary" href="<c:url value="Registration.htm"/> ">зарегистрироваться</a> </p>
   </sec:authorize>
   <sec:authorize access="hasAnyRole('ROLE_CLIENT','ROLE_ADMIN')">
     <c:choose>
       <c:when test="${empty appointment}">
-        <p><a href="<c:url value="SelectCampaign.htm"/> ">Назначить дату и время</a> для подачи заявления. </p>
+        <p><a class="btn btn-primary"  href="<c:url value="SelectCampaign.htm"/> ">Назначить дату и время</a> для подачи заявления. </p>
       </c:when>
       <c:otherwise>
         <p>День, когда мы Вас ожидаем, - <fmt:formatDate value="${appointment.scheduledDate}" pattern="EEEE, dd MMMM"/>
           в <fmt:formatDate value="${appointment.scheduledTime}" pattern="HH:mm"/>. </p>
-        <p>Вы можете <a href="<c:url value="/CreateAppointment.htm"><c:param name="id" value="${appointment.id}"/></c:url>">изменить</a> Вашу запись. </p>
+        <p>Вы можете <a class="btn btn-primary" href="<c:url value="/CreateAppointment.htm"><c:param name="id" value="${appointment.id}"/></c:url>">изменить</a> Вашу запись. </p>
       </c:otherwise>
     </c:choose>
   </sec:authorize>
 
-</div>

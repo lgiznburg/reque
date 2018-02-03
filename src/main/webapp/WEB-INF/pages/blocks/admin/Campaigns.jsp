@@ -5,7 +5,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<div>
   <h2>Список приемных кампаний</h2>
   <div>
     <c:forEach var="campaign" items="${campaigns}">
@@ -15,7 +14,6 @@
       </div>
     </c:forEach>
   </div>
-  <div>
-    <a href="<c:url value="/admin/CampaignEdit.htm"/>">Создать новую Приемную кампанию</a>
-  </div>
-</div>
+  <p>
+    <a class="btn" href="<c:url value="/admin/CampaignEdit.htm"/>">Создать новую Приемную кампанию</a>
+  </p>

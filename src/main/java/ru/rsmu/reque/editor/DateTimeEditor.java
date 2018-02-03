@@ -2,6 +2,7 @@ package ru.rsmu.reque.editor;
 
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorSupport;
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -74,11 +75,28 @@ public class DateTimeEditor extends PropertyEditorSupport implements PropertyEdi
         PATTERN_FORMATS.put(Pattern.compile("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{1,3}"), DASHES_YEAR_MONTH_DAY_TIME);
     }
 
+    private SimpleDateFormat suggestedFormat;
+
+    public DateTimeEditor() {
+    }
+
+    public DateTimeEditor( boolean useTimeFormat ) {
+        if ( useTimeFormat ) {
+            this.suggestedFormat = HOUR_MINUTE_TIME;
+        }
+    }
+
     /** {@inheritDoc} */
     @Override
     public String getAsText() {
         final Date date = (Date) getValue();
-        return date == null ? "" : DEFAULT_DATE_FORMAT.format(date);
+        if ( date == null ) {
+            return "";
+        }
+        else if ( suggestedFormat == null ) {
+            return DEFAULT_DATE_FORMAT.format(date);
+        }
+        return suggestedFormat.format(date);
     }
 
     /** {@inheritDoc} */
@@ -91,7 +109,13 @@ public class DateTimeEditor extends PropertyEditorSupport implements PropertyEdi
                 if (matcher.matches()) {
                     final SimpleDateFormat format = patternFormatEntry.getValue();
                     final Date date = format.parse(text);
-                    setValue(date);
+                    if ( suggestedFormat != null && format.equals( suggestedFormat ) ) {
+                        Time time = new Time( date.getTime() );
+                        setValue( time );
+                    }
+                    else {
+                        setValue( date );
+                    }
                     return;
                 }
             } catch (final ParseException e) {

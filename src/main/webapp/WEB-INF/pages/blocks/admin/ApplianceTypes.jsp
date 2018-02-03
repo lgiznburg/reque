@@ -4,11 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<div class="column-form faces list">
-  <div class="hd">
     <h2>Список типов заявлений</h2>
-  </div>
-  <div class="bd">
 
     <table>
       <tr>
@@ -25,6 +21,6 @@
         </tr>
       </c:forEach>
     </table>
-    <p><a href="<c:url value="/admin/ApplianceTypeEdit.htm"/>">Создать новый тип</a></p>
-  </div>
-</div>
+    <p>
+      <a class="btn" href="<c:url value="/admin/ApplianceTypeEdit.htm"/>">Создать новый тип</a>
+    </p>

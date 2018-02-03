@@ -5,14 +5,10 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<div>
   <h2>Выберите цель обращения</h2>
-  <div>
+  <p>
     <c:forEach var="campaign" items="${campaigns}">
-      <div>
-        <a href="<c:url value="/CreateAppointment.htm"><c:param name="campaign" value="${campaign.id}"/></c:url>">${campaign.name}</a>
-        <fmt:formatDate value="${campaign.startDate}" dateStyle="medium"/> - <fmt:formatDate value="${campaign.endDate}" dateStyle="medium"/>
-      </div>
+        <a class="btn btn-block" href="<c:url value="/CreateAppointment.htm"><c:param name="campaign" value="${campaign.id}"/></c:url>">${campaign.name}
+        <fmt:formatDate value="${campaign.startDate}" dateStyle="medium"/> - <fmt:formatDate value="${campaign.endDate}" dateStyle="medium"/></a>
     </c:forEach>
-  </div>
-</div>
+  </p>

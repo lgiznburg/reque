@@ -6,12 +6,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 
-<div class="column-form">
-  <div class="hd">
-    <h2>Edit Field Type</h2>
-  </div>
-  <div class="bd">
-    <form:form commandName="storedProperty" action="StoredPropertyEdit.htm" method="post" name="storedProperty">
+    <h2></h2>
+
+<form:form commandName="storedProperty" action="StoredPropertyEdit.htm" method="post" name="storedProperty" cssClass="form-horizontal">
       <form:hidden path="propertyName"/>
       <table>
         <tr class="region-name">
@@ -28,16 +25,13 @@
             <form:errors path="value" cssStyle="color:red;"/>
           </td>
         </tr>
-        <tr>
-          <td colspan="2">
-            <input type="submit" value="save"/>
-            &nbsp;
-            <a href="<c:url value="/admin/StoredProperties.htm"/>"><button  value="cancel">cancel</button></a>
-          </td>
-        </tr>
       </table>
-    </form:form>
+
+  <div class="control-group">
+    <div class="controls">
+      <a class="btn" href="<c:url value="/admin/StoredProperties.htm"/>">Назад</a>
+      <button type="submit" class="btn btn-primary">Сохранить</button>
+    </div>
   </div>
-  <div class="ft"></div>
-</div>
+    </form:form>
 

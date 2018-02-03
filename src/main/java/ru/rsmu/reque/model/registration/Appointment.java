@@ -7,6 +7,7 @@ import ru.rsmu.reque.model.system.User;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Date;
 
 /**
@@ -27,9 +28,9 @@ public class Appointment implements Serializable {
     private Date scheduledDate;
 
     @Column(name = "scheduled_time")
-    @Temporal( TemporalType.TIME )
+    //@Temporal( TemporalType.TIME )
     @NotNull
-    private Date scheduledTime;
+    private Time scheduledTime;
 
     @Column(name = "online_number")
     @NotBlank
@@ -65,11 +66,11 @@ public class Appointment implements Serializable {
         this.scheduledDate = scheduledDate;
     }
 
-    public Date getScheduledTime() {
+    public Time getScheduledTime() {
         return scheduledTime;
     }
 
-    public void setScheduledTime( Date scheduledTime ) {
+    public void setScheduledTime( Time scheduledTime ) {
         this.scheduledTime = scheduledTime;
     }
 

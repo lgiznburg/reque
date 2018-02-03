@@ -6,56 +6,58 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 
-<div class="column-form">
-  <div class="hd">
-    <h2>User Registration</h2>
+<h2>Регистрация</h2>
+
+<form:form commandName="userToReg" name="user" method="post" action="Registration.htm"  cssClass="form-horizontal">
+  <form:hidden path="id"/>
+
+  <div class="control-group">
+    <form:label path="username" cssClass="control-label" cssErrorClass="control-label text-error">E-mail <sup>*</sup></form:label>
+    <div class="controls">
+      <form:input path="username" />
+      <form:errors path="username" element="span" cssClass="text-error" />
+    </div>
   </div>
-  <div class="bd">
-    <form:form commandName="userToReg" name="user" method="post" action="Registration.htm">
-      <form:hidden path="id"/>
-      <table>
-        <tr>
-          <th>Email:</th>
-          <td>
-            <form:input path="username"/> <br/><form:errors path="username"/>
-          </td>
-        </tr>
-        <tr>
-          <th>Password:</th>
-          <td>
-            <form:password path="password" /> <br/><form:errors path="password"/>
-          </td>
-        </tr>
-        <tr>
-          <th>Password confirmation:</th>
-          <td>
-            <form:password path="passwordConfirmation" /><br/><form:errors path="passwordConfirmation"/>
-          </td>
-        </tr>
-        <tr>
-          <th>First name:</th>
-          <td>
-            <form:input path="firstName"/> <br/><form:errors path="firstName"/>
-          </td>
-        </tr>
-        <tr>
-          <th>Last Name:</th>
-          <td>
-            <form:input path="lastName"/> <br/><form:errors path="lastName"/>
-          </td>
-        </tr>
-        <tr>
-          <th>Mobile phone:</th>
-          <td>
-            <form:input path="phoneNumber"/> <br/><form:errors path="phoneNumber"/>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <input type="submit" name="save" value="Save">
-          </td>
-        </tr>
-      </table>
-    </form:form>
+  <div class="control-group">
+    <form:label path="password" cssClass="control-label" cssErrorClass="control-label text-error">Пароль <sup>*</sup></form:label>
+    <div class="controls">
+      <form:password path="password" />
+      <form:errors path="password" element="span" cssClass="text-error" />
+    </div>
   </div>
-</div>
+  <div class="control-group">
+    <form:label path="passwordConfirmation" cssClass="control-label" cssErrorClass="control-label text-error">Подтверждение пароля <sup>*</sup></form:label>
+    <div class="controls">
+      <form:password path="passwordConfirmation" />
+      <form:errors path="passwordConfirmation" element="span" cssClass="text-error" />
+    </div>
+  </div>
+  <div class="control-group">
+    <form:label path="firstName" cssClass="control-label" cssErrorClass="control-label text-error">Имя <sup>*</sup></form:label>
+    <div class="controls">
+      <form:input path="firstName" />
+      <form:errors path="firstName" element="span" cssClass="text-error" />
+    </div>
+  </div>
+  <div class="control-group">
+    <form:label path="lastName" cssClass="control-label" cssErrorClass="control-label text-error">Фамилия <sup>*</sup></form:label>
+    <div class="controls">
+      <form:input path="lastName" />
+      <form:errors path="lastName" element="span" cssClass="text-error" />
+    </div>
+  </div>
+  <div class="control-group">
+    <form:label path="phoneNumber" cssClass="control-label" cssErrorClass="control-label text-error">Мобильный телефон </form:label>
+    <div class="controls">
+      <form:input path="phoneNumber" />
+      <form:errors path="phoneNumber" element="span" cssClass="text-error" />
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      <a class="btn" href="<c:url value="/home.htm"/>">Назад</a>
+      <button type="submit" class="btn btn-primary">Сохранить</button>
+    </div>
+  </div>
+</form:form>

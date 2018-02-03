@@ -6,31 +6,31 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 
-<div class="column-form">
-  <div class="hd">
-    <h2>Edit Field Type</h2>
-  </div>
-  <div class="bd">
-    <form:form commandName="applianceType" action="ApplianceTypeEdit.htm" method="post" name="applianceType">
-      <form:hidden path="id"/>
-      <div>
-        <form:label path="name" for="name">Название</form:label>
-        <form:input path="name" size="100%"/>
-        <form:errors path="name" cssStyle="color:red;"/>
-      </div>
-      <div>
-        <form:label path="description" for="name">Полное название</form:label>
-        <form:input path="description" size="100%"/>
-        <form:errors path="description" cssStyle="color:red;"/>
-      </div>
+<h2>Тип заявления</h2>
 
-      <div>
-        <input type="submit" value="save"/>
-        &nbsp;
-        <a href="<c:url value="/admin/ApplianceTypes.htm"/>"><button  value="cancel">cancel</button></a>
-      </div>
-    </form:form>
+<form:form commandName="applianceType" action="ApplianceTypeEdit.htm" method="post" name="applianceType" cssClass="form-horizontal">
+  <form:hidden path="id"/>
+
+  <div class="control-group">
+    <form:label path="name" for="name" cssClass="control-label" cssErrorClass="control-label text-error">Название</form:label>
+    <div class="controls">
+      <form:input path="name"/>
+      <form:errors path="name"  cssClass="text-error" element="span"/>
+    </div>
   </div>
-  <div class="ft"></div>
-</div>
+  <div class="control-group">
+    <form:label path="description" for="name" cssClass="control-label" cssErrorClass="control-label text-error">Полное название</form:label>
+    <div class="controls">
+      <form:input path="description"/>
+      <form:errors path="description" cssClass="text-error" element="span"/>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+      <a class="btn" href="<c:url value="/admin/ApplianceTypes.htm"/>">Назад</a>
+      <button class="btn btn-primary" type="submit">Сохранить</button>
+    </div>
+  </div>
+</form:form>
 

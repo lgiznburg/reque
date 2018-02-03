@@ -21,6 +21,7 @@ import ru.rsmu.reque.model.system.User;
 import ru.rsmu.reque.service.StoredPropertyService;
 
 import javax.validation.Valid;
+import java.sql.Time;
 import java.util.*;
 
 /**
@@ -168,6 +169,7 @@ public class CreateAppointment extends BaseController {
     @InitBinder
     public void initBinder( WebDataBinder binder ) {
         binder.registerCustomEditor( Date.class, new DateTimeEditor() );
+        binder.registerCustomEditor( Time.class, new DateTimeEditor( true ) );
         binder.registerCustomEditor( ApplianceType.class, new ApplianceTypeEditor( appointmentDao ) );
         binder.registerCustomEditor( ReceptionCampaign.class, new ReceptionCampaignEditor( campaignDao ) );
     }

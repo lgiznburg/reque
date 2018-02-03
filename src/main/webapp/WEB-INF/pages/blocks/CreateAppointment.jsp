@@ -20,9 +20,11 @@
       minDate: new Date( <fmt:formatDate value="${startDate}" pattern="yyyy, M-1, d"/> ),
       maxDate: new Date( <fmt:formatDate value="${endDate}" pattern="yyyy, M-1, d"/> ),
       beforeShowDay: onShowDate,
-      onSelect: showTime
+      onSelect: showTime,
+      showOptions: { direction: "down" },
+      showAnim: "slideDown"
     } );
-    $("#scheduledDate").datepicker( "option", $.datepicker.regional[ "ru" ] );
+    //$("#scheduledDate").datepicker( "option", $.datepicker.regional[ "ru" ] );
 
     $("#scheduledTime").timepicker({
       minTime: <fmt:formatDate value="${startTime}" pattern="''H:mm''" />,
@@ -32,7 +34,12 @@
       step: ${granularity},
       disableTextInput: true,
       orientation: 'bl'
-    })
+    });
+
+    <c:if test="${appointment.id ne 0}">
+    showTime( $("#scheduledTime").datepicker( "getDate" ) );
+    </c:if>
+
   });
 
   function showTime( date ) {
@@ -60,46 +67,43 @@
 
 </script>
 
-<div class="column-form">
-  <div class="hd">
-    <h2>Create Appointment</h2>
+<h2>Create Appointment</h2>
+
+<form:form commandName="appointment" name="appointment" method="post" action="CreateAppointment.htm" cssClass="form-horizontal">
+  <form:hidden path="id"/>
+  <form:hidden path="campaign"/>
+  <div class="control-group">
+    <form:label path="onlineNumber" cssClass="control-label" cssErrorClass="control-label text-error">Код онлайн регистрации <sup>*</sup></form:label>
+    <div class="controls">
+      <form:input path="onlineNumber" />
+      <form:errors path="onlineNumber" element="span" cssClass="text-error" />
+    </div>
   </div>
-  <div class="bd">
-    <form:form commandName="appointment" name="appointment" method="post" action="CreateAppointment.htm">
-      <form:hidden path="id"/>
-      <form:hidden path="campaign"/>
-      <table>
-        <tr>
-          <th>Online Code:</th>
-          <td>
-            <form:input path="onlineNumber"/> <br/><form:errors path="onlineNumber"/>
-          </td>
-        </tr>
-        <tr>
-          <th>Type of Appliance:</th>
-          <td>
-            <form:select path="type" items="${applianceTypes}" itemLabel="description" itemValue="id"/>
-            <br/><form:errors path="type"/>
-          </td>
-        </tr>
-        <tr>
-          <th>Date:</th>
-          <td>
-            <form:input path="scheduledDate" /> <br/><form:errors path="scheduledDate"/>
-          </td>
-        </tr>
-        <tr id="timeSection" style="display: none;">
-          <th>Time:</th>
-          <td>
-            <form:input path="scheduledTime" /> <br/><form:errors path="scheduledTime"/>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <input type="submit" name="save" value="Save">
-          </td>
-        </tr>
-      </table>
-    </form:form>
+  <div class="control-group">
+    <form:label path="type" cssClass="control-label" cssErrorClass="control-label text-error">Тип заявления <sup>*</sup></form:label>
+    <div class="controls">
+      <form:select path="type" items="${applianceTypes}" itemLabel="description" itemValue="id" />
+      <form:errors path="type" element="span" cssClass="text-error"/>
+    </div>
   </div>
-</div>
+  <div class="control-group">
+    <form:label path="scheduledDate" cssClass="control-label" cssErrorClass="control-label text-error">Дата <sup>*</sup></form:label>
+    <div class="controls">
+      <form:input path="scheduledDate" />
+      <form:errors path="scheduledDate" element="span" cssClass="text-error"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <form:label path="scheduledTime" cssClass="control-label" cssErrorClass="control-label text-error">Время <sup>*</sup></form:label>
+    <div class="controls">
+      <form:input path="scheduledTime" />
+      <form:errors path="scheduledTime" element="span" cssClass="text-error"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <a class="btn" href="<c:url value="/home.htm"/>">Назад</a>
+      <button type="submit" class="btn btn-primary">Сохранить</button>
+    </div>
+  </div>
+</form:form>
