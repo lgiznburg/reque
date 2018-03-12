@@ -4,25 +4,9 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     <description>Electronic Queue and Registration</description>
 
-
-<!--
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>
-            /WEB-INF/applicationContext.xml
-        </param-value>
-    </context-param>
--->
-
     <servlet>
         <servlet-name>reque</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-<!--
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value>WEB-INF/applicationContext.xml, WEB-INF/reque-servlet.xml</param-value>
-        </init-param>
--->
         <load-on-startup>1</load-on-startup>
     </servlet>
 

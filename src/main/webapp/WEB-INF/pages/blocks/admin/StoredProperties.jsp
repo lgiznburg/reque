@@ -6,8 +6,8 @@
 
     <h2>List of System Properties</h2>
 
-    <table>
-      <tr class="region-name">
+    <table class="table">
+      <tr>
         <th>Property Group</th>
         <th>Property Name</th>
         <th>Property Value</th>
@@ -15,7 +15,7 @@
 
       <c:set value="" var="group"/>
       <c:forEach items="${storedProperties}" var="storedProperty">
-        <tr class="region-name" <c:if test="${group ne storedProperty.propertyName.groupName}">style="border-top: solid black 1px"</c:if> >
+        <tr <c:if test="${group ne storedProperty.propertyName.groupName}">style="border-top: solid black 1px"</c:if> >
           <td>
             <c:if test="${group ne storedProperty.propertyName.groupName}">
               ${storedProperty.propertyName.groupName}

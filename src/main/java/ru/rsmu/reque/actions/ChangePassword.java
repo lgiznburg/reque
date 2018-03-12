@@ -1,5 +1,6 @@
 package ru.rsmu.reque.actions;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,9 +9,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import ru.rsmu.reque.dao.UserDao;
+import ru.rsmu.reque.dao.IUserDao;
+import ru.rsmu.reque.model.system.RemindPasswordKey;
 import ru.rsmu.reque.model.system.User;
-import ru.rsmu.reque.service.EmailService;
 import ru.rsmu.reque.service.EmailType;
 import ru.rsmu.reque.service.UserService;
 import ru.rsmu.reque.validators.UserValidator;
@@ -23,8 +24,11 @@ import java.util.Map;
  * @author leonid.
  */
 @Controller
-@RequestMapping(value = "/Registration.htm")
-public class Registration extends BaseController {
+@RequestMapping(value = "/ChangePassword.htm")
+public class ChangePassword extends BaseController {
+
+    @Autowired
+    private IUserDao userDao;
 
     @Autowired
     private UserService userService;
@@ -32,21 +36,30 @@ public class Registration extends BaseController {
     @Autowired
     private UserValidator userValidator;
 
-    @Autowired
-    private EmailService emailService;
-
-    public Registration() {
+    public ChangePassword() {
         setTitle( "Registration" );
-        setContent( "/WEB-INF/pages/blocks/Registration.jsp" );
+        setContent( "/WEB-INF/pages/blocks/ChangePassword.jsp" );
     }
 
     @ModelAttribute("userToReg")
-    public User getUserToReg() {
-        return new User();
+    public User getUserToReg( @RequestParam(value = "key", required = false) String key ) {
+        User current = getUser();
+        if ( StringUtils.isNotBlank( key ) && current == null ) {
+            RemindPasswordKey remindPasswordKey = userDao.findRemindPasswordKey( key );
+            if ( remindPasswordKey != null ) {
+                return remindPasswordKey.getUser();
+            }
+        }
+        return current;
     }
 
+
     @RequestMapping( method = {RequestMethod.GET, RequestMethod.HEAD})
-    public String showForm( ModelMap model ) {
+    public String showForm( ModelMap model,
+                            @ModelAttribute("userToReg") User userToReg ) {
+        if ( userToReg == null ) {
+            return "redirect:/home.htm";
+        }
         return buildModel( model );
     }
 
@@ -63,11 +76,7 @@ public class Registration extends BaseController {
                 userToReg, userToReg.getPassword(), userToReg.getAuthorities() );
         SecurityContextHolder.getContext().setAuthentication( t );
 
-        Map<String,Object> emailContext = new HashMap<>();
-        emailContext.put( "user", userToReg );
-        emailService.sendEmail( userToReg, EmailType.REGISTRATION_CONFIRM, emailContext );
-
-        return "redirect:/SelectCampaign.htm";
+        return "redirect:/home.htm";
     }
 
     @InitBinder
@@ -76,4 +85,5 @@ public class Registration extends BaseController {
             binder.setValidator( userValidator );
         }
     }
+
 }

@@ -13,6 +13,9 @@
     <context:component-scan base-package="ru.rsmu.reque.service"/>
     <context:component-scan base-package="ru.rsmu.reque.validators"/>
 
+    <context:property-placeholder location="classpath:regue.properties" ignore-resource-not-found="true" ignore-unresolvable="true" />
+
+
     <!-- the interseptor to keep the session open to avoid lazy initialization problems -->
     <bean name="openSessionInViewInterceptor" class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
         <property name="sessionFactory" ref="sessionFactory"/>
@@ -48,11 +51,23 @@
         <property name="defaultEncoding" value="UTF-8"/>
     </bean>
 
+
     <!-- Annotation driven validator factory. Default implementation of JSR-303
         bean validation API -->
     <bean id="validator"
           class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
         <property name="validationMessageSource" ref="messageSource" />
+    </bean>
+
+    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <value>
+                resource.loader=class
+                class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+                input.encoding=UTF-8
+                output.encoding=UTF-8
+            </value>
+        </property>
     </bean>
 
 </beans>

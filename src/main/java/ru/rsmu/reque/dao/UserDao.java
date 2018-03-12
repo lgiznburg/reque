@@ -6,9 +6,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
+import ru.rsmu.reque.model.system.RemindPasswordKey;
 import ru.rsmu.reque.model.system.User;
 import ru.rsmu.reque.model.system.UserRole;
 import ru.rsmu.reque.model.system.UserRoleName;
+
+import java.util.Date;
 
 /**
  * @author leonid.
@@ -44,5 +47,19 @@ public class UserDao extends CommonDao implements UserDetailsService, IUserDao {
 
     public void saveUser( User user ) {
         saveEntity( user );
+    }
+
+    @Override
+    public RemindPasswordKey findRemindPasswordKey( String uniqueKey ) {
+        Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( RemindPasswordKey.class )
+                .add( Restrictions.eq( "uniqueKey", uniqueKey ) )
+                .add( Restrictions.gt( "expiredTime", new Date()) )
+                .setMaxResults( 1 );
+        return  (RemindPasswordKey) criteria.uniqueResult();
+    }
+
+    @Override
+    public void savePasswordKey( RemindPasswordKey key ) {
+        saveEntity( key );
     }
 }

@@ -211,3 +211,19 @@ CREATE TABLE public.appointments
 WITH (
 OIDS = FALSE
 );
+
+CREATE TABLE public.password_kyes
+(
+  id bigserial NOT NULL,
+  user_id BIGINT,
+  unique_key CHARACTER VARYING(255),
+  expired_time TIMESTAMP WITHOUT TIME ZONE,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_password_key_users FOREIGN KEY (user_id)
+    REFERENCES public.users (id) MATCH SIMPLE
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION
+)
+WITH (
+OIDS = FALSE
+);

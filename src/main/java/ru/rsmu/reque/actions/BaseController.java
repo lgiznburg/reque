@@ -34,7 +34,6 @@ public class BaseController {
         this.content = content;
     }
 
-    @ModelAttribute("user")
     public User getUser() {
         return SecurityContextHelper.getUser();
     }

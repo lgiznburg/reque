@@ -16,7 +16,7 @@ import java.util.Date;
  * @author leonid.
  */
 @Controller
-@RequestMapping("/home.htm")
+@RequestMapping(value = "/home.htm")
 public class Home extends BaseController {
 
     @Autowired
@@ -25,16 +25,6 @@ public class Home extends BaseController {
     public Home() {
         setTitle( "Home" );
         setContent( "/WEB-INF/pages/blocks/Home.jsp" );
-    }
-
-    @ModelAttribute("appointment")
-    public Appointment getAppointment() {
-        User user = getUser();
-        if ( user != null ) {
-            Appointment appointment = appointmentDao.findAppointment( user, new Date() );
-            return appointment;
-        }
-        return null;
     }
 
     @RequestMapping( method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.HEAD})

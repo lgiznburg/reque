@@ -7,24 +7,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-import ru.rsmu.reque.dao.UserDao;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import ru.rsmu.reque.model.system.User;
-import ru.rsmu.reque.service.EmailService;
-import ru.rsmu.reque.service.EmailType;
 import ru.rsmu.reque.service.UserService;
 import ru.rsmu.reque.validators.UserValidator;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author leonid.
  */
 @Controller
-@RequestMapping(value = "/Registration.htm")
-public class Registration extends BaseController {
+@RequestMapping(value = "/EditUser.htm")
+public class EditUser extends BaseController {
 
     @Autowired
     private UserService userService;
@@ -32,21 +30,23 @@ public class Registration extends BaseController {
     @Autowired
     private UserValidator userValidator;
 
-    @Autowired
-    private EmailService emailService;
-
-    public Registration() {
-        setTitle( "Registration" );
-        setContent( "/WEB-INF/pages/blocks/Registration.jsp" );
+    public EditUser() {
+        setTitle( "Edit User" );
+        setContent( "/WEB-INF/pages/blocks/EditUser.jsp" );
     }
 
     @ModelAttribute("userToReg")
     public User getUserToReg() {
-        return new User();
+        return getUser();
     }
 
+
     @RequestMapping( method = {RequestMethod.GET, RequestMethod.HEAD})
-    public String showForm( ModelMap model ) {
+    public String showForm( ModelMap model,
+                            @ModelAttribute("userToReg") User userToReg ) {
+        if ( userToReg == null ) {
+            return "redirect:/home.htm";
+        }
         return buildModel( model );
     }
 
@@ -63,11 +63,7 @@ public class Registration extends BaseController {
                 userToReg, userToReg.getPassword(), userToReg.getAuthorities() );
         SecurityContextHolder.getContext().setAuthentication( t );
 
-        Map<String,Object> emailContext = new HashMap<>();
-        emailContext.put( "user", userToReg );
-        emailService.sendEmail( userToReg, EmailType.REGISTRATION_CONFIRM, emailContext );
-
-        return "redirect:/SelectCampaign.htm";
+        return "redirect:/home.htm";
     }
 
     @InitBinder
@@ -76,4 +72,6 @@ public class Registration extends BaseController {
             binder.setValidator( userValidator );
         }
     }
+
+
 }

@@ -104,6 +104,7 @@
     <div class="controls">
       <a class="btn" href="<c:url value="/home.htm"/>">Назад</a>
       <button type="submit" class="btn btn-primary">Сохранить</button>
+      <button type="submit" name="delete" class="btn">Удалить</button>
     </div>
   </div>
 </form:form>

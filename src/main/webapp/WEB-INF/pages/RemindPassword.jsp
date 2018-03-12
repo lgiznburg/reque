@@ -54,23 +54,23 @@
 <div class="container">
 
 
-  <form name='loginForm'
-        action="<c:url value='/j_spring_security_check' />" method='POST' class="form-signin">
+  <form name='remindPassword'
+        action="<c:url value='/RemindPassword.htm' />" method='POST' class="form-signin">
 
-    <h2 class="form-signin-heading">Пожалуйста, используйте Ваш email и пароль</h2>
+    <h2 class="form-signin-heading">Пожалуйста, укажите Ваш email</h2>
 
-    <c:if test="${not empty error}">
-      <div class="error">${error}</div>
+    <c:if test="${not empty userNotFound}">
+      <div class="error">К сожалению, указанный email не найден. Вы можете <a href="<c:url value="/Registration.htm"/>">зарегистрироваться</a> на на нашем сервисе.</div>
     </c:if>
-    <c:if test="${not empty msg}">
-      <div class="msg">${msg}</div>
+    <c:if test="${not empty success}">
+      <div class="msg">Письмо с иструкциями по обновлению пароля направлено на Вашу почту.
+        Воспользуйтесь им в ближайшее время.</div>
+      <div class="msg">Спасибо за использование нашего сервиса.</div>
     </c:if>
 
-    <input type='text' id="j_username" name='j_username' value='' class="input-block-level" placeholder="Email address">
-    <input type='password' id="j_password" name='j_password'  class="input-block-level" placeholder="Пароль"/>
-    <button class="btn btn-primary" type="submit">Войти</button>
+    <input type='text' name='email' value='' class="input-block-level" placeholder="Email address">
+    <button class="btn btn-primary" type="submit">Напомнить пароль</button>
 
-    <div><a href="<c:url value="/RemindPassword.htm"/>">Забыли пароль?</a> </div>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
   </form>

@@ -6,7 +6,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <div>
-  <table width="100%" border="1" cellpadding="5" >
+  <table class="table" >
     <tr>
       <th>Date</th>
       <c:forEach items="${types}" var="appType">

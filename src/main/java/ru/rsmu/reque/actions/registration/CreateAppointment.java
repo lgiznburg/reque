@@ -18,10 +18,13 @@ import ru.rsmu.reque.model.registration.ReceptionCampaign;
 import ru.rsmu.reque.model.system.ApplianceType;
 import ru.rsmu.reque.model.system.StoredPropertyName;
 import ru.rsmu.reque.model.system.User;
+import ru.rsmu.reque.service.EmailService;
+import ru.rsmu.reque.service.EmailType;
 import ru.rsmu.reque.service.StoredPropertyService;
 
 import javax.validation.Valid;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -39,6 +42,9 @@ public class CreateAppointment extends BaseController {
 
     @Autowired
     private ReceptionCampaignDao campaignDao;
+
+    @Autowired
+    private EmailService emailService;
 
     public CreateAppointment() {
         setTitle( "Определить дату визита" );
@@ -190,9 +196,33 @@ public class CreateAppointment extends BaseController {
         if ( errors.hasErrors() ) {
             return buildModel( model );
         }
-        appointment.setUser( getUser() );
+        User user = getUser();
+        appointment.setUser( user );
         appointmentDao.saveEntity( appointment );
+
+        Calendar appointmentDate = Calendar.getInstance();
+        appointmentDate.setTime( appointment.getScheduledDate() );
+        Calendar time = Calendar.getInstance();
+        time.setTime( appointment.getScheduledTime() );
+        appointmentDate.set( Calendar.HOUR_OF_DAY, time.get( Calendar.HOUR_OF_DAY ) );
+        appointmentDate.set( Calendar.MINUTE, time.get( Calendar.MINUTE ) );
+
+        SimpleDateFormat format = new SimpleDateFormat( "EEEE, dd MMMM в HH:mm", new Locale("ru") );
+        Map<String,Object> emailContext = new HashMap<>();
+        emailContext.put( "fullDate", format.format( appointmentDate.getTime() ) );
+        emailContext.put( "user", user );
+        emailContext.put( "appointment", appointment );
+
+        emailService.sendEmail( user, EmailType.REMINDER, emailContext );
+
         return "redirect:/home.htm";
     }
 
+    @RequestMapping(method = RequestMethod.POST, params = "delete")
+    public String deleteAppointment( ModelMap model,
+                                     @ModelAttribute("appointment") Appointment appointment ) {
+
+        appointmentDao.deleteEntity( appointment );
+        return "redirect:/home.htm";
+    }
 }

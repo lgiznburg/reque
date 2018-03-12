@@ -21,7 +21,8 @@ public class ReceptionCampaignDao extends CommonDao {
 
     public List<ReceptionCampaign> findAvailableCampaigns( Date date ) {
         Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( ReceptionCampaign.class )
-                .add( Restrictions.gt( "endDate", date ) );
+                .add( Restrictions.gt( "endDate", date ) )
+                .add( Restrictions.eq( "active", true ) );
         return  criteria.list();
     }
 
