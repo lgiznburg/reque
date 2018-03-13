@@ -199,7 +199,7 @@ CREATE TABLE public.appointments
   REFERENCES public.appliance_types (id) MATCH SIMPLE
   ON UPDATE NO ACTION
   ON DELETE NO ACTION,
-  CONSTRAINT fk_appointments_campaignss FOREIGN KEY (campaign_id)
+  CONSTRAINT fk_appointments_campaigns FOREIGN KEY (campaign_id)
   REFERENCES public.reception_campaigns (id) MATCH SIMPLE
   ON UPDATE NO ACTION
   ON DELETE NO ACTION,
@@ -212,7 +212,7 @@ WITH (
 OIDS = FALSE
 );
 
-CREATE TABLE public.password_kyes
+CREATE TABLE public.password_keys
 (
   id bigserial NOT NULL,
   user_id BIGINT,

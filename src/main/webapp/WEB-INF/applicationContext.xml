@@ -17,19 +17,12 @@
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <!--<property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver"/>-->
-        <property name="driverClassName" value="org.postgresql.Driver"/>
-        <!-- devel server -->
-        <property name="url" value="jdbc:postgresql://localhost:5432/reque"/>
-        <property name="username" value="leonid"/>
-        <property name="password" value="111"/>
+        <property name="driverClassName" value="${dataSource.className}"/>
 
-        <!-- staging server -->
-        <!--
-        -->
+        <property name="url" value="${dataSource.url}"/>
+        <property name="username" value="${dataSource.username}"/>
+        <property name="password" value="${dataSource.password}"/>
 
-        <!-- production server PostgreSQL -->
-        <!--
-        -->
     </bean>
 
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
@@ -37,7 +30,8 @@
         <property name="packagesToScan" value="ru.rsmu.reque.model"/>
         <property name="hibernateProperties">
             <props>
-                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.default_schema">dbo</prop>
                 <prop key="hibernate.max_fetch_depth">6</prop>
                 <prop key="hibernate.default_batch_fetch_size">16</prop>
                 <prop key="hibernate.connection.CharSet">utf8</prop>

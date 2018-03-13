@@ -8,7 +8,7 @@ import java.util.Date;
  * @author leonid.
  */
 @Entity
-@Table(name = "password_key")
+@Table(name = "password_keys")
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class RemindPasswordKey implements Serializable {
 

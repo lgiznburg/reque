@@ -40,13 +40,15 @@
         <profile>
             <id>qa</id>
             <properties>
-                <flyway.sqlMigrationPrefix>QA_V</flyway.sqlMigrationPrefix>
+                <flyway.sqlMigrationPrefix>PROD_V</flyway.sqlMigrationPrefix>
 
-                <!-- put production qa settings here
-                <flyway.url></flyway.url>
-                <flyway.user>username</flyway.user>
-                <flyway.password>password</flyway.password>
-                 -->
+                <!-- put production qa settings here -->
+                <!--<flyway.driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</flyway.driver>-->
+                <flyway.driver>net.sourceforge.jtds.jdbc.Driver</flyway.driver>
+                <flyway.url>jdbc:jtds:sqlserver://192.168.111.67:1433/reque</flyway.url>
+                <flyway.user>tandem</flyway.user>
+                <flyway.password>123Tandem456</flyway.password>
+
             </properties>
         </profile>
 
@@ -55,11 +57,12 @@
             <properties>
                 <flyway.sqlMigrationPrefix>PROD_V</flyway.sqlMigrationPrefix>
 
-                <!-- put production db settings here
-                <flyway.url></flyway.url>
-                <flyway.user>username</flyway.user>
-                <flyway.password>password</flyway.password>
-                 -->
+                <!-- put production db settings here -->
+                <flyway.driver>net.sourceforge.jtds.jdbc.Driver</flyway.driver>
+                <flyway.url>jdbc:jtds:sqlserver://172.118.1.27:1433/reque</flyway.url>
+                <flyway.user>tandem</flyway.user>
+                <flyway.password>123Tandem456</flyway.password>
+
             </properties>
         </profile>
     </profiles>
@@ -72,6 +75,12 @@
             <version>5.1.16</version>
         </dependency>
 -->
+
+        <dependency>
+            <groupId>net.sourceforge.jtds</groupId>
+            <artifactId>jtds</artifactId>
+            <version>1.3.1</version>
+        </dependency>
 
         <dependency>
             <groupId>postgresql</groupId>
