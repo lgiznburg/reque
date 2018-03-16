@@ -31,7 +31,7 @@
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.dialect">${hibernate.dialect}</prop>
-                <prop key="hibernate.default_schema">dbo</prop>
+                <prop key="hibernate.default_schema">${hibernate.default_schema}</prop>
                 <prop key="hibernate.max_fetch_depth">6</prop>
                 <prop key="hibernate.default_batch_fetch_size">16</prop>
                 <prop key="hibernate.connection.CharSet">utf8</prop>

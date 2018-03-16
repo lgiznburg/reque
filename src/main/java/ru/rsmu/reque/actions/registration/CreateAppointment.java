@@ -54,7 +54,7 @@ public class CreateAppointment extends BaseController {
     @ModelAttribute("availableDates")
     public List<Map<String, Object>> getAvailableDates( ModelMap model,
                                                         @RequestParam(value = "campaign", required = false) ReceptionCampaign campaign ) {
-        Appointment appointment = (Appointment) model.get( "appointment" );
+        Appointment appointment = (Appointment) model.get( "appointmentToCreate" );
         if ( appointment == null ) {
             appointment = getAppointment( campaign );
         }
@@ -107,7 +107,7 @@ public class CreateAppointment extends BaseController {
         Calendar calendar = Calendar.getInstance();
         calendar.add( Calendar.DAY_OF_YEAR, 1 );
 
-        Appointment appointment = (Appointment) model.get( "appointment" );
+        Appointment appointment = (Appointment) model.get( "appointmentToCreate" );
         if ( appointment == null ) {
             appointment = getAppointment( campaign );
         }
@@ -121,7 +121,7 @@ public class CreateAppointment extends BaseController {
     @ModelAttribute("endDate")
     public Date getEndDate( ModelMap model,
                             @RequestParam(value = "campaign", required = false) ReceptionCampaign campaign ) {
-        Appointment appointment = (Appointment) model.get( "appointment" );
+        Appointment appointment = (Appointment) model.get( "appointmentToCreate" );
         if ( appointment == null ) {
             appointment = getAppointment( campaign );
         }
@@ -146,7 +146,7 @@ public class CreateAppointment extends BaseController {
         return propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_END_TIME );
     }
 
-    @ModelAttribute("appointment")
+    @ModelAttribute("appointmentToCreate")
     public Appointment getAppointment( @RequestParam(value = "campaign", required = false) ReceptionCampaign campaign ) {
         User user = getUser();
         Date dateNow = new Date();
@@ -162,7 +162,7 @@ public class CreateAppointment extends BaseController {
     @ModelAttribute("applianceTypes")
     public List<ApplianceType> getApplianceTypes( ModelMap model,
                                                   @RequestParam(value = "campaign", required = false) ReceptionCampaign campaign ) {
-        Appointment appointment = (Appointment) model.get( "appointment" );
+        Appointment appointment = (Appointment) model.get( "appointmentToCreate" );
         if ( appointment == null ) {
             appointment = getAppointment( campaign );
         }
@@ -182,7 +182,7 @@ public class CreateAppointment extends BaseController {
 
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.HEAD})
     public String showPage( ModelMap model,
-                            @ModelAttribute("appointment") Appointment appointment) {
+                            @ModelAttribute("appointmentToCreate") Appointment appointment) {
         if ( appointment.getCampaign() == null ) {
             return "redirect:/SelectCampaign.htm";
         }
@@ -191,7 +191,7 @@ public class CreateAppointment extends BaseController {
 
     @RequestMapping(method = RequestMethod.POST)
     public String saveAppointment( ModelMap model,
-                                   @ModelAttribute("appointment") @Valid Appointment appointment,
+                                   @ModelAttribute("appointmentToCreate") @Valid Appointment appointment,
                                    BindingResult errors ) {
         if ( errors.hasErrors() ) {
             return buildModel( model );
@@ -220,7 +220,7 @@ public class CreateAppointment extends BaseController {
 
     @RequestMapping(method = RequestMethod.POST, params = "delete")
     public String deleteAppointment( ModelMap model,
-                                     @ModelAttribute("appointment") Appointment appointment ) {
+                                     @ModelAttribute("appointmentToCreate") Appointment appointment ) {
 
         appointmentDao.deleteEntity( appointment );
         return "redirect:/home.htm";

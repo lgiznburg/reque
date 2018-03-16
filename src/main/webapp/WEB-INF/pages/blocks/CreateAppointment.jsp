@@ -69,7 +69,7 @@
 
 <h2>Create Appointment</h2>
 
-<form:form commandName="appointment" name="appointment" method="post" action="CreateAppointment.htm" cssClass="form-horizontal">
+<form:form commandName="appointmentToCreate" name="appointment" method="post" action="CreateAppointment.htm" cssClass="form-horizontal">
   <form:hidden path="id"/>
   <form:hidden path="campaign"/>
   <div class="control-group">
@@ -104,7 +104,9 @@
     <div class="controls">
       <a class="btn" href="<c:url value="/home.htm"/>">Назад</a>
       <button type="submit" class="btn btn-primary">Сохранить</button>
-      <button type="submit" name="delete" class="btn">Удалить</button>
+      <c:if test="${appointmentToCreate.id > 0}">
+        <button type="submit" name="delete" class="btn">Удалить</button>
+      </c:if>
     </div>
   </div>
 </form:form>
