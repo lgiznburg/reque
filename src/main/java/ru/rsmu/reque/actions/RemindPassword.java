@@ -13,6 +13,7 @@ import ru.rsmu.reque.service.EmailService;
 import ru.rsmu.reque.service.EmailType;
 import ru.rsmu.reque.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class RemindPassword {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String sendMessage( ModelMap model,
+    public String sendMessage( HttpServletRequest request, ModelMap model,
                                @RequestParam(value = "email",required = false, defaultValue = "") String email ) {
         User user = userDao.findUser( email );
         if ( user != null ) {
@@ -52,7 +53,8 @@ public class RemindPassword {
             Map<String,Object> emailContext = new HashMap<>();
             emailContext.put( "user", user );
             emailContext.put( "key", key );
-            emailService.sendEmail( user, EmailType.REGISTRATION_CONFIRM, emailContext );
+            emailContext.put( "remindUrl", makeUrl( request, key ) );
+            emailService.sendEmail( user, EmailType.PASSWORD_REMINDER, emailContext );
 
             model.put( "success", true );
         }
@@ -60,5 +62,17 @@ public class RemindPassword {
             model.put( "userNotFound", true );
         }
         return VIEW_JSP;
+    }
+
+    private String makeUrl( HttpServletRequest request, RemindPasswordKey key ) {
+        StringBuffer url = request.getRequestURL();
+        String pageUri = request.getServletPath();
+        int start = url.indexOf( pageUri );
+        if ( start > 0 ) {
+            url.delete( start, url.length() );
+        }
+        url.append( "/ChangePassword.htm?key=" ).append( key.getUniqueKey() );
+
+        return url.toString();
     }
 }

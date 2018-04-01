@@ -6,32 +6,24 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 
-    <h2></h2>
+    <h2>Изменить свойство</h2>
 
-<form:form commandName="storedProperty" action="StoredPropertyEdit.htm" method="post" name="storedProperty" cssClass="form-horizontal">
-      <form:hidden path="propertyName"/>
-      <table>
-        <tr class="region-name">
-          <th>
-              ${storedProperty.propertyName.groupName}
-          </th>
-          <th>
-              ${storedProperty.propertyName.name}
-          </th>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <form:input path="value" size="100%"/>
-            <form:errors path="value" cssStyle="color:red;"/>
-          </td>
-        </tr>
-      </table>
+<form:form commandName="storedProperty" action="StoredPropertyEdit.htm" method="post" name="storedProperty">
+  <form:hidden path="propertyName"/>
+  <div class="form-group row">
+    <div class="col-sm-2">${storedProperty.propertyName.groupName}</div>
+    <div class="col-sm-2">${storedProperty.propertyName.name}</div>
+    <div class="co-s-5">
+      <form:input path="value" cssClass="form-control"/>
+      <form:errors path="value" cssClass="text-danger"/>
+    </div>
+  </div>
 
-  <div class="control-group">
-    <div class="controls">
-      <a class="btn" href="<c:url value="/admin/StoredProperties.htm"/>">Назад</a>
+  <div class="form-group row">
+    <div class="col-sm-5">
+      <a class="btn btn-outline-success" href="<c:url value="/admin/StoredProperties.htm"/>">Назад</a>
       <button type="submit" class="btn btn-primary">Сохранить</button>
     </div>
   </div>
-    </form:form>
+</form:form>
 

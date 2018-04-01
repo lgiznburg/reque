@@ -1,15 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Login Page</title>
+  <title>Напомнить пароль</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="<c:url value="/resources/css/jquery-ui.min.css"/>"/>
   <!-- Bootstrap -->
-  <link href="<c:url value="/resources/css/bootstrap.min.css"/>" rel="stylesheet" media="screen">
+  <link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet" media="screen">
   <style type="text/css">
     body {
       padding-top: 40px;
@@ -43,7 +44,6 @@
     }
 
   </style>
-  <link href="<c:url value="/resources/css/bootstrap-responsive.min.css"/>" rel="stylesheet">
 
   <script src="<c:url value="/resources/js/jquery.js"/>"></script>
 
@@ -57,18 +57,18 @@
   <form name='remindPassword'
         action="<c:url value='/RemindPassword.htm' />" method='POST' class="form-signin">
 
-    <h2 class="form-signin-heading">Пожалуйста, укажите Ваш email</h2>
+    <h4 class="form-signin-heading">Пожалуйста, укажите Ваш email</h4>
 
     <c:if test="${not empty userNotFound}">
-      <div class="error">К сожалению, указанный email не найден. Вы можете <a href="<c:url value="/Registration.htm"/>">зарегистрироваться</a> на на нашем сервисе.</div>
+      <div class="form-text text-danger">К сожалению, указанный email не найден. Вы можете <a href="<c:url value="/Registration.htm"/>">зарегистрироваться</a> на на нашем сервисе.</div>
     </c:if>
     <c:if test="${not empty success}">
-      <div class="msg">Письмо с иструкциями по обновлению пароля направлено на Вашу почту.
+      <div class="form-text text-success">Письмо с иструкциями по обновлению пароля направлено на Вашу почту.
         Воспользуйтесь им в ближайшее время.</div>
-      <div class="msg">Спасибо за использование нашего сервиса.</div>
+      <div class="form-text text-success">Спасибо за использование нашего сервиса.</div>
     </c:if>
 
-    <input type='text' name='email' value='' class="input-block-level" placeholder="Email address">
+    <input type='text' name='email' value='' class="form-control" placeholder="Email">
     <button class="btn btn-primary" type="submit">Напомнить пароль</button>
 
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
@@ -79,6 +79,7 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
+<script src="<c:url value="/resources/js/popper.min.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.min.js"/> "></script>
 </body>
 </html>

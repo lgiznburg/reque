@@ -23,5 +23,5 @@
   </c:forEach>
 </table>
 <p>
-  <a class="btn" href="<c:url value="/admin/CampaignEdit.htm"/>">Создать новую Приемную кампанию</a>
+  <a class="btn btn-primary" href="<c:url value="/admin/CampaignEdit.htm"/>">Создать новую Приемную кампанию</a>
 </p>

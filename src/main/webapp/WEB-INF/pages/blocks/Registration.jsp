@@ -8,55 +8,55 @@
 
 <h2>Регистрация</h2>
 
-<form:form commandName="userToReg" name="user" method="post" action="Registration.htm"  cssClass="form-horizontal">
+<form:form commandName="userToReg" name="user" method="post" action="Registration.htm">
   <form:hidden path="id"/>
 
-  <div class="control-group">
-    <form:label path="username" cssClass="control-label" cssErrorClass="control-label text-error">E-mail <sup>*</sup></form:label>
-    <div class="controls">
-      <form:input path="username" />
-      <form:errors path="username" element="span" cssClass="text-error" />
+  <div class="form-group row">
+    <form:label path="username" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">E-mail <sup>*</sup></form:label>
+    <div class="col-sm-5">
+      <form:input path="username"  class="form-control"/>
+      <form:errors path="username" element="span" cssClass="text-danger" />
     </div>
   </div>
-  <div class="control-group">
-    <form:label path="password" cssClass="control-label" cssErrorClass="control-label text-error">Пароль <sup>*</sup></form:label>
-    <div class="controls">
-      <form:password path="password" />
-      <form:errors path="password" element="span" cssClass="text-error" />
+  <div class="form-group row">
+    <form:label path="password" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Пароль <sup>*</sup></form:label>
+    <div class="col-sm-5">
+      <form:password path="password" class="form-control" />
+      <form:errors path="password" element="span" cssClass="text-danger" />
     </div>
   </div>
-  <div class="control-group">
-    <form:label path="passwordConfirmation" cssClass="control-label" cssErrorClass="control-label text-error">Подтверждение пароля <sup>*</sup></form:label>
-    <div class="controls">
-      <form:password path="passwordConfirmation" />
-      <form:errors path="passwordConfirmation" element="span" cssClass="text-error" />
+  <div class="form-group row">
+    <form:label path="passwordConfirmation" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Подтверждение пароля <sup>*</sup></form:label>
+    <div class="col-sm-5">
+      <form:password path="passwordConfirmation" class="form-control" />
+      <form:errors path="passwordConfirmation" element="span" cssClass="text-danger" />
     </div>
   </div>
-  <div class="control-group">
-    <form:label path="firstName" cssClass="control-label" cssErrorClass="control-label text-error">Имя <sup>*</sup></form:label>
-    <div class="controls">
-      <form:input path="firstName" />
-      <form:errors path="firstName" element="span" cssClass="text-error" />
+  <div class="form-group row">
+    <form:label path="firstName" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Имя <sup>*</sup></form:label>
+    <div class="col-sm-5">
+      <form:input path="firstName" class="form-control" />
+      <form:errors path="firstName" element="span" cssClass="text-danger" />
     </div>
   </div>
-  <div class="control-group">
-    <form:label path="lastName" cssClass="control-label" cssErrorClass="control-label text-error">Фамилия <sup>*</sup></form:label>
-    <div class="controls">
-      <form:input path="lastName" />
-      <form:errors path="lastName" element="span" cssClass="text-error" />
+  <div class="form-group row">
+    <form:label path="lastName" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Фамилия <sup>*</sup></form:label>
+    <div class="col-sm-5">
+      <form:input path="lastName" class="form-control" />
+      <form:errors path="lastName" element="span" cssClass="text-danger" />
     </div>
   </div>
-  <div class="control-group">
-    <form:label path="phoneNumber" cssClass="control-label" cssErrorClass="control-label text-error">Мобильный телефон </form:label>
-    <div class="controls">
-      <form:input path="phoneNumber" />
-      <form:errors path="phoneNumber" element="span" cssClass="text-error" />
+  <div class="form-group row">
+    <form:label path="phoneNumber" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Мобильный телефон </form:label>
+    <div class="col-sm-5">
+      <form:input path="phoneNumber" class="form-control" />
+      <form:errors path="phoneNumber" element="span" cssClass="text-danger" />
     </div>
   </div>
 
-  <div class="control-group">
-    <div class="controls">
-      <a class="btn" href="<c:url value="/home.htm"/>">Назад</a>
+  <div class="form-group row">
+    <div class="col-sm-5">
+      <a class="btn btn-outline-success" href="<c:url value="/home.htm"/>">Назад</a>
       <button type="submit" class="btn btn-primary">Сохранить</button>
     </div>
   </div>

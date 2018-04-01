@@ -67,45 +67,45 @@
 
 </script>
 
-<h2>Create Appointment</h2>
+<h2>Предварительная запись</h2>
 
-<form:form commandName="appointmentToCreate" name="appointment" method="post" action="CreateAppointment.htm" cssClass="form-horizontal">
+<form:form commandName="appointmentToCreate" name="appointment" method="post" action="CreateAppointment.htm">
   <form:hidden path="id"/>
   <form:hidden path="campaign"/>
-  <div class="control-group">
-    <form:label path="onlineNumber" cssClass="control-label" cssErrorClass="control-label text-error">Код онлайн регистрации <sup>*</sup></form:label>
-    <div class="controls">
-      <form:input path="onlineNumber" />
-      <form:errors path="onlineNumber" element="span" cssClass="text-error" />
+  <div class="form-group row">
+    <form:label path="onlineNumber" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Код онлайн регистрации <sup>*</sup></form:label>
+    <div class="col-sm-5">
+      <form:input path="onlineNumber"  cssClass="form-control"/>
+      <form:errors path="onlineNumber" element="span" cssClass="text-danger" />
     </div>
   </div>
-  <div class="control-group">
-    <form:label path="type" cssClass="control-label" cssErrorClass="control-label text-error">Тип заявления <sup>*</sup></form:label>
-    <div class="controls">
-      <form:select path="type" items="${applianceTypes}" itemLabel="description" itemValue="id" />
-      <form:errors path="type" element="span" cssClass="text-error"/>
+  <div class="form-group row">
+    <form:label path="type" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Тип заявления <sup>*</sup></form:label>
+    <div class="col-sm-5">
+      <form:select path="type" items="${applianceTypes}" itemLabel="description" itemValue="id"   cssClass="form-control"/>
+      <form:errors path="type" element="span" cssClass="text-danger"/>
     </div>
   </div>
-  <div class="control-group">
-    <form:label path="scheduledDate" cssClass="control-label" cssErrorClass="control-label text-error">Дата <sup>*</sup></form:label>
-    <div class="controls">
-      <form:input path="scheduledDate" />
-      <form:errors path="scheduledDate" element="span" cssClass="text-error"/>
+  <div class="form-group row">
+    <form:label path="scheduledDate" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Дата <sup>*</sup></form:label>
+    <div class="col-sm-5">
+      <form:input path="scheduledDate"   cssClass="form-control"/>
+      <form:errors path="scheduledDate" element="span" cssClass="text-danger"/>
     </div>
   </div>
-  <div class="control-group">
-    <form:label path="scheduledTime" cssClass="control-label" cssErrorClass="control-label text-error">Время <sup>*</sup></form:label>
-    <div class="controls">
-      <form:input path="scheduledTime" />
-      <form:errors path="scheduledTime" element="span" cssClass="text-error"/>
+  <div class="form-group row">
+    <form:label path="scheduledTime" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Время <sup>*</sup></form:label>
+    <div class="col-sm-5">
+      <form:input path="scheduledTime"  cssClass="form-control" />
+      <form:errors path="scheduledTime" element="span" cssClass="text-danger"/>
     </div>
   </div>
-  <div class="control-group">
-    <div class="controls">
-      <a class="btn" href="<c:url value="/home.htm"/>">Назад</a>
+  <div class="form-group row">
+    <div class="col-sm-7">
+      <a class="btn btn-outline-success" href="<c:url value="/home.htm"/>">Назад</a>
       <button type="submit" class="btn btn-primary">Сохранить</button>
       <c:if test="${appointmentToCreate.id > 0}">
-        <button type="submit" name="delete" class="btn">Удалить</button>
+        <button type="submit" name="delete" class="btn btn-outline-warning">Удалить</button>
       </c:if>
     </div>
   </div>

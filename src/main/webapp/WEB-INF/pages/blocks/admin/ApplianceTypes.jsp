@@ -22,5 +22,5 @@
       </c:forEach>
     </table>
     <p>
-      <a class="btn" href="<c:url value="/admin/ApplianceTypeEdit.htm"/>">Создать новый тип</a>
+      <a class="btn btn-primary" href="<c:url value="/admin/ApplianceTypeEdit.htm"/>">Создать новый тип</a>
     </p>

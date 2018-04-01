@@ -8,30 +8,30 @@
 
 <h2>Изменение пароля</h2>
 
-<form:form commandName="userToReg" name="user" method="post" action="ChangePassword.htm"  cssClass="form-horizontal">
+<form:form commandName="userToReg" name="user" method="post" action="ChangePassword.htm" >
     <c:if test="${not empty param.key}"><input type="hidden" name="key" value="${param.key}"> </c:if>
 <%--
   <form:hidden path="id"/>
 --%>
 
-  <div class="control-group">
-    <form:label path="password" cssClass="control-label" cssErrorClass="control-label text-error">Пароль <sup>*</sup></form:label>
-    <div class="controls">
-      <form:password path="password" />
-      <form:errors path="password" element="span" cssClass="text-error" />
+  <div class="form-group row">
+    <form:label path="password" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Пароль <sup>*</sup></form:label>
+    <div class="col-sm-5">
+      <form:password path="password" cssClass="form-control"/>
+      <form:errors path="password" element="span" cssClass="text-danger" />
     </div>
   </div>
-  <div class="control-group">
-    <form:label path="passwordConfirmation" cssClass="control-label" cssErrorClass="control-label text-error">Подтверждение пароля <sup>*</sup></form:label>
-    <div class="controls">
-      <form:password path="passwordConfirmation" />
-      <form:errors path="passwordConfirmation" element="span" cssClass="text-error" />
+  <div class="form-group row">
+    <form:label path="passwordConfirmation" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Подтверждение пароля <sup>*</sup></form:label>
+    <div class="col-sm-5">
+      <form:password path="passwordConfirmation" cssClass="form-control" />
+      <form:errors path="passwordConfirmation" element="span" cssClass="text-danger" />
     </div>
   </div>
 
-  <div class="control-group">
-    <div class="controls">
-      <a class="btn" href="<c:url value="/home.htm"/>">Назад</a>
+  <div class="form-group row">
+    <div class="col-sm-5">
+      <a class="btn btn-outline-success" href="<c:url value="/home.htm"/>">Назад</a>
       <button type="submit" class="btn btn-primary">Сохранить</button>
     </div>
   </div>

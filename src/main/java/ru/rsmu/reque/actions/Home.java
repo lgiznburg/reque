@@ -23,7 +23,7 @@ public class Home extends BaseController {
     private AppointmentDao appointmentDao;
 
     public Home() {
-        setTitle( "Home" );
+        setTitle( "Предварительная запись" );
         setContent( "/WEB-INF/pages/blocks/Home.jsp" );
     }
 

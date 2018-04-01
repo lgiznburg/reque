@@ -35,7 +35,7 @@ public class UserValidator implements Validator {
 
         User user = (User) object;
 
-        if ( !errors.hasFieldErrors( "username" ) ) {
+        if ( !errors.hasFieldErrors( "username" ) && user.getId() == 0 ) {
             User existed = userDao.findUser( user.getUsername() );
             if ( existed != null ) {
                 errors.rejectValue( "username", "user.registration.already_exist", "User already exist." );

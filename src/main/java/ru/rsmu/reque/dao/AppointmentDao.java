@@ -2,6 +2,7 @@ package ru.rsmu.reque.dao;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -60,25 +61,32 @@ public class AppointmentDao extends CommonDao {
     }
 
     public Map<Date, Map<ApplianceType, Long>> findStatistics() {
+        return findStatistics( null );
+    }
+
+    public Map<Date, Map<ApplianceType, Long>> findStatistics( Date date ) {
         Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( Appointment.class )
                 .setProjection( Projections.projectionList()
                                 .add( Projections.rowCount() )
                         .add( Projections.groupProperty( "scheduledDate" ) )
                         .add( Projections.groupProperty( "type" ) )
                 );
+        if ( date != null ) {
+            criteria.add( Restrictions.eq( "scheduledDate", date ) );
+        }
         List result = criteria.list(); //query.list();
         Map<Date,Map<ApplianceType,Long>> stats = new HashMap<>();
         Date current = null;
         Map<ApplianceType,Long> day = new HashMap<>();
         for ( Object object : result ) {
             Object[] row = (Object[]) object;
-            Date date = (Date) row[1];
-            if ( !date.equals( current ) ) {
+            Date dateRes = (Date) row[1];
+            if ( !dateRes.equals( current ) ) {
                 if ( current != null ) {
                     stats.put( current, day );
                 }
                 day = new HashMap<>();
-                current = date;
+                current = dateRes;
             }
             day.put( (ApplianceType) row[2] , (Long) row[0] );
         }
@@ -98,5 +106,12 @@ public class AppointmentDao extends CommonDao {
                 .add( Restrictions.gt( "scheduledDate", date ) )
                 .setMaxResults( 1 );
         return (Appointment) criteria.uniqueResult();
+    }
+
+    public List<Appointment> findDayAppointments( Date date ) {
+        Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( Appointment.class )
+                .add( Restrictions.eq( "scheduledDate", date ) )
+                .addOrder( Order.asc( "scheduledTime") );
+        return criteria.list();
     }
 }

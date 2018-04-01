@@ -36,7 +36,7 @@ public class Registration extends BaseController {
     private EmailService emailService;
 
     public Registration() {
-        setTitle( "Registration" );
+        setTitle( "Регистрация" );
         setContent( "/WEB-INF/pages/blocks/Registration.jsp" );
     }
 

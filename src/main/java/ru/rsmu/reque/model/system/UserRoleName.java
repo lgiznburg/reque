@@ -7,7 +7,7 @@ public enum UserRoleName {
     ROLE_ANONYMOUS,
     ROLE_CLIENT,
     ROLE_USER,
-    ROLE_SERVICER,
+    ROLE_SERVICEMAN,
     ROLE_MANAGER,
     ROLE_ADMIN
 }

@@ -37,7 +37,7 @@ public class ChangePassword extends BaseController {
     private UserValidator userValidator;
 
     public ChangePassword() {
-        setTitle( "Registration" );
+        setTitle( "Измененить пароль" );
         setContent( "/WEB-INF/pages/blocks/ChangePassword.jsp" );
     }
 

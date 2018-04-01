@@ -32,6 +32,9 @@ public class ServicePlaceType implements Serializable {
     @JoinColumn(name = "role_id")
     private UserRole assignedRole;
 
+    @Column
+    private int simultaneously = 1;
+
     public long getId() {
         return id;
     }
@@ -62,5 +65,13 @@ public class ServicePlaceType implements Serializable {
 
     public void setAssignedRole( UserRole assignedRole ) {
         this.assignedRole = assignedRole;
+    }
+
+    public int getSimultaneously() {
+        return simultaneously;
+    }
+
+    public void setSimultaneously( int simultaneously ) {
+        this.simultaneously = simultaneously;
     }
 }

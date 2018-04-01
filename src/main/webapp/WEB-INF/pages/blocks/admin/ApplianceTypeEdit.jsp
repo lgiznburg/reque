@@ -8,27 +8,27 @@
 
 <h2>Тип заявления</h2>
 
-<form:form commandName="applianceType" action="ApplianceTypeEdit.htm" method="post" name="applianceType" cssClass="form-horizontal">
+<form:form commandName="applianceType" action="ApplianceTypeEdit.htm" method="post" name="applianceType">
   <form:hidden path="id"/>
 
-  <div class="control-group">
-    <form:label path="name" for="name" cssClass="control-label" cssErrorClass="control-label text-error">Название</form:label>
-    <div class="controls">
-      <form:input path="name"/>
-      <form:errors path="name"  cssClass="text-error" element="span"/>
+  <div class="form-group row">
+    <form:label path="name" for="name" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Название</form:label>
+    <div class="col-sm-5">
+      <form:input path="name"  cssClass="form-control"/>
+      <form:errors path="name"  cssClass="text-danger" element="span"/>
     </div>
   </div>
-  <div class="control-group">
-    <form:label path="description" for="name" cssClass="control-label" cssErrorClass="control-label text-error">Полное название</form:label>
-    <div class="controls">
-      <form:input path="description"/>
-      <form:errors path="description" cssClass="text-error" element="span"/>
+  <div class="form-group row">
+    <form:label path="description" for="name" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Полное название</form:label>
+    <div class="col-sm-5">
+      <form:input path="description"  cssClass="form-control"/>
+      <form:errors path="description" cssClass="text-danger" element="span"/>
     </div>
   </div>
 
-  <div class="control-group">
-    <div class="controls">
-      <a class="btn" href="<c:url value="/admin/ApplianceTypes.htm"/>">Назад</a>
+  <div class="form-group row">
+    <div class="col-sm-5">
+      <a class="btn btn-outline-success" href="<c:url value="/admin/ApplianceTypes.htm"/>">Назад</a>
       <button class="btn btn-primary" type="submit">Сохранить</button>
     </div>
   </div>

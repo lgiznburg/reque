@@ -31,7 +31,7 @@ public class EditUser extends BaseController {
     private UserValidator userValidator;
 
     public EditUser() {
-        setTitle( "Edit User" );
+        setTitle( "Изменить данные" );
         setContent( "/WEB-INF/pages/blocks/EditUser.jsp" );
     }
 

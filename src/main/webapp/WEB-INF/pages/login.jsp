@@ -1,15 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 
+<!DOCTYPE html>
 <html>
 <head>
-  <title>Login Page</title>
+  <title>Вход</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="<c:url value="/resources/css/jquery-ui.min.css"/>"/>
   <!-- Bootstrap -->
-  <link href="<c:url value="/resources/css/bootstrap.min.css"/>" rel="stylesheet" media="screen">
+  <link href="<c:url value="/resources/css/bootstrap.css"/>" rel="stylesheet" media="screen">
   <style type="text/css">
     body {
       padding-top: 40px;
@@ -43,7 +44,6 @@
     }
 
   </style>
-  <link href="<c:url value="/resources/css/bootstrap-responsive.min.css"/>" rel="stylesheet">
 
   <script src="<c:url value="/resources/js/jquery.js"/>"></script>
 
@@ -57,20 +57,26 @@
   <form name='loginForm'
         action="<c:url value='/j_spring_security_check' />" method='POST' class="form-signin">
 
-    <h2 class="form-signin-heading">Пожалуйста, используйте Ваш email и пароль</h2>
+    <h4 class="form-signin-heading">Пожалуйста, используйте Ваш email и пароль</h4>
 
     <c:if test="${not empty error}">
-      <div class="error">${error}</div>
+      <div class="form-text text-danger">${error}</div>
     </c:if>
     <c:if test="${not empty msg}">
-      <div class="msg">${msg}</div>
+      <div class="form-text text-info">${msg}</div>
     </c:if>
 
-    <input type='text' id="j_username" name='j_username' value='' class="input-block-level" placeholder="Email address">
-    <input type='password' id="j_password" name='j_password'  class="input-block-level" placeholder="Пароль"/>
-    <button class="btn btn-primary" type="submit">Войти</button>
+    <div class="form-group">
+      <input type='text' id="j_username" name='j_username' value='' class="form-control" placeholder="Email address">
+    </div>
+    <div class="form-group">
+      <input type='password' id="j_password" name='j_password'  class="form-control" placeholder="Пароль"/>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary" type="submit">Войти</button>
+    </div>
 
-    <div><a href="<c:url value="/RemindPassword.htm"/>">Забыли пароль?</a> </div>
+    <div class="form-group"><a href="<c:url value="/RemindPassword.htm"/>">Забыли пароль?</a> </div>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
   </form>
@@ -79,6 +85,7 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
+<script src="<c:url value="/resources/js/popper.min.js"/> "></script>
 <script src="<c:url value="/resources/js/bootstrap.min.js"/> "></script>
 </body>
 </html>
