@@ -12,24 +12,36 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
+<h2>Статус в очереди</h2>
 <form:form commandName="queueStatus" method="post">
   <form:hidden path="id"/>
-  <table>
-    <tr>
-      <th><form:label path="name">Название</form:label></th>
-      <td><form:input path="name"/></td>
-    </tr>
-    <tr>
-      <th><form:label path="description">Описание</form:label></th>
-      <td><form:textarea path="description"/></td>
-    </tr>
-    <tr>
-      <th><form:label path="type">Тип</form:label></th>
-      <td><form:select path="type" items="${queueStatusTypes}"/> </td>
-    </tr>
-    <tr>
-      <th></th>
-      <td><input type="submit" value="Save"></td>
-    </tr>
-  </table>
+  <div class="form-group row">
+    <form:label path="name" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Название</form:label>
+    <div class="col-sm-5">
+      <form:input path="name"  cssClass="form-control"/>
+      <form:errors path="name" cssClass="text-danger" element="span"/>
+    </div>
+  </div>
+  <div class="form-group row">
+    <form:label path="description" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Описание</form:label>
+    <div class="col-sm-5">
+      <form:input path="description"  cssClass="form-control"/>
+      <form:errors path="description" cssClass="text-danger" element="span"/>
+    </div>
+  </div>
+  <div class="form-group row">
+    <form:label path="type" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Тип</form:label>
+    <div class="col-sm-5">
+      <form:select path="type" items="${queueStatusTypes}"/>
+      <form:errors path="type" cssClass="text-danger" element="span"/>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-sm-7">
+      <a class="btn btn-outline-success" href="<c:url value="/admin/QueueStatuses.htm"/>">Назад</a>
+      <button type="submit" class="btn btn-primary">Сохранить</button>
+    </div>
+  </div>
+
 </form:form>
