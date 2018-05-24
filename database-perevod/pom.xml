@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.rsmu</groupId>
-    <artifactId>reque_database</artifactId>
-    <name>reque_database</name>
+    <artifactId>perevod_database</artifactId>
+    <name>perevod_database</name>
     <packaging>jar</packaging>
     <version>1.0.0</version>
 
@@ -18,7 +18,7 @@
         <flyway.basePackage>org.rsmu.reque.patches</flyway.basePackage>
         <flyway.baseDir>patches</flyway.baseDir>
         <flyway.driver>org.postgresql.Driver</flyway.driver>
-        <flyway.url>jdbc:postgresql://localhost:5432/reque</flyway.url>
+        <flyway.url>jdbc:postgresql://localhost:5432/perevod</flyway.url>
         <flyway.user>leonid</flyway.user>
         <flyway.password></flyway.password>
 
@@ -45,7 +45,7 @@
                 <!-- put production qa settings here -->
                 <!--<flyway.driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</flyway.driver>-->
                 <flyway.driver>net.sourceforge.jtds.jdbc.Driver</flyway.driver>
-                <flyway.url>jdbc:jtds:sqlserver://192.168.111.67:1433/reque</flyway.url>
+                <flyway.url>jdbc:jtds:sqlserver://192.168.111.67:1433/perevod</flyway.url>
                 <flyway.user>tandem</flyway.user>
                 <flyway.password>123Tandem456</flyway.password>
 
@@ -59,7 +59,7 @@
 
                 <!-- put production db settings here -->
                 <flyway.driver>net.sourceforge.jtds.jdbc.Driver</flyway.driver>
-                <flyway.url>jdbc:jtds:sqlserver://172.18.1.27:1433/reque</flyway.url>
+                <flyway.url>jdbc:jtds:sqlserver://172.18.1.27:1433/perevod</flyway.url>
                 <flyway.user>tandem</flyway.user>
                 <flyway.password>123Tandem456</flyway.password>
 
