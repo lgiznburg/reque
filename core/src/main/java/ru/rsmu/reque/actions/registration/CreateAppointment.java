@@ -20,6 +20,7 @@ import ru.rsmu.reque.model.system.User;
 import ru.rsmu.reque.service.EmailService;
 import ru.rsmu.reque.service.EmailType;
 import ru.rsmu.reque.service.StoredPropertyService;
+import ru.rsmu.reque.utils.RuDateHelper;
 
 import javax.validation.Valid;
 import java.sql.Time;
@@ -142,7 +143,15 @@ public class CreateAppointment extends BaseController {
 
     @ModelAttribute("endTime")
     public Date getEndTime() {
-        return propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_END_TIME );
+        Calendar lastTime = Calendar.getInstance();
+        lastTime.setTime( propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_START_TIME ) );
+        Date endTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_END_TIME );
+        int interval = propertyService.getPropertyAsInt( StoredPropertyName.SCHEDULE_SERVICE_INTERVAL );
+        while ( endTime.after( lastTime.getTime() ) ) {
+            lastTime.add( Calendar.MINUTE, interval );
+        }
+        lastTime.add( Calendar.MINUTE, - interval );
+        return lastTime.getTime();
     }
 
     @ModelAttribute("appointmentToCreate")
@@ -208,7 +217,7 @@ public class CreateAppointment extends BaseController {
 
         SimpleDateFormat format = new SimpleDateFormat( "EEEE, dd MMMM в HH:mm", new Locale( "ru" ) );
         Map<String,Object> emailContext = new HashMap<>();
-        emailContext.put( "fullDate", format.format( appointmentDate.getTime() ) );
+        emailContext.put( "fullDate", RuDateHelper.genetiveDay( format.format( appointmentDate.getTime() ) ) );
         emailContext.put( "user", user );
         emailContext.put( "appointment", appointment );
 

@@ -6,6 +6,7 @@ import ru.rsmu.reque.dao.AppointmentDao;
 import ru.rsmu.reque.model.registration.Appointment;
 import ru.rsmu.reque.service.EmailService;
 import ru.rsmu.reque.service.EmailType;
+import ru.rsmu.reque.utils.RuDateHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,7 +34,7 @@ public class SendEmailRemind {
         for ( Appointment appointment : appointmentDao.findDayAppointments( calendar.getTime() ) ) {
             SimpleDateFormat format = new SimpleDateFormat( "EEEE, dd MMMM в HH:mm", new Locale( "ru" ) );
             Map<String,Object> emailContext = new HashMap<>();
-            emailContext.put( "fullDate", format.format( appointment.getScheduledDate() ) );
+            emailContext.put( "fullDate", RuDateHelper.genetiveDay( format.format( appointment.getScheduledDate() ) ) );
             emailContext.put( "user", appointment.getUser() );
             emailContext.put( "appointment", appointment );
 

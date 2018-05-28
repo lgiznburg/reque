@@ -1,5 +1,6 @@
 package ru.rsmu.reque.model.registration;
 
+import org.hibernate.annotations.Formula;
 import org.hibernate.validator.constraints.NotBlank;
 import ru.rsmu.reque.model.system.ApplianceType;
 import ru.rsmu.reque.model.system.User;
@@ -49,6 +50,9 @@ public class Appointment implements Serializable {
     @JoinColumn(name = "campaign_id")
     @NotNull
     private ReceptionCampaign campaign;
+
+    @Formula( "(select count(app.id)>1 from appointments app where app.client_id=client_id)" )
+    private boolean repeated;
 
     public long getId() {
         return id;
@@ -104,5 +108,13 @@ public class Appointment implements Serializable {
 
     public void setCampaign( ReceptionCampaign campaign ) {
         this.campaign = campaign;
+    }
+
+    public boolean isRepeated() {
+        return repeated;
+    }
+
+    public void setRepeated( boolean repeated ) {
+        this.repeated = repeated;
     }
 }

@@ -73,7 +73,7 @@
   <form:hidden path="id"/>
   <form:hidden path="campaign"/>
   <div class="form-group row">
-    <form:label path="onlineNumber" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Код онлайн регистрации <sup>*</sup></form:label>
+    <form:label path="onlineNumber" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Последние четыре цифры номера паспорта <sup>*</sup></form:label>
     <div class="col-sm-5">
       <form:input path="onlineNumber"  cssClass="form-control"/>
       <form:errors path="onlineNumber" element="span" cssClass="text-danger" />

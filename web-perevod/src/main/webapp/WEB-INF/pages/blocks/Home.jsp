@@ -14,7 +14,7 @@
 
 <h2>Предварительная запись на подачу заявления на перевод.</h2>
 <p class="text-info"><strong>Уважаемые студенты!</strong></p>
-<p>Атестационная комиссия стремится сделать подачу заявления на поступление в наш университет как можно белее простой и удобной.
+<p>Аттестационная комиссия стремится сделать подачу заявления на поступление в наш университет как можно белее простой и удобной.
   Мы хотим, чтобы Вы тратили как можно меньше времени на ожидание, поэтому мы принимаем заявления только по предварительной
 записи.</p>
 
@@ -27,7 +27,7 @@
         <p><a class="btn btn-primary"  href="<c:url value="SelectCampaign.htm"/> ">Назначить дату и время</a> для подачи заявления. </p>
       </c:when>
       <c:otherwise>
-        <p>День, когда мы Вас ожидаем, - <fmt:formatDate value="${appointment.scheduledDate}" pattern="EEEE, dd MMMM"/>
+        <p>Мы Вас ожидаем в  ${fullDate} <%--<fmt:formatDate value="${appointment.scheduledDate}" pattern="EEEE, dd MMMM"/>--%>
           в <fmt:formatDate value="${appointment.scheduledTime}" pattern="HH:mm"/>. </p>
         <p>Вы можете <a class="btn btn-primary" href="<c:url value="/CreateAppointment.htm"><c:param name="id" value="${appointment.id}"/></c:url>">изменить</a> Вашу запись. </p>
       </c:otherwise>
