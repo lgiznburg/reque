@@ -51,7 +51,7 @@ public class Appointment implements Serializable {
     @NotNull
     private ReceptionCampaign campaign;
 
-    @Formula( "(select count(app.id)>1 from appointments app where app.client_id=client_id)" )
+    @Formula( "(select case when count(app.id)>1 then 1 else 0 end from appointments app where app.client_id=client_id)" )
     private boolean repeated;
 
     public long getId() {
