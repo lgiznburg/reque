@@ -14,7 +14,7 @@ INSERT INTO appliance_types (name,description)
     VALUES ('перевод','заявление на перевод');
 
 INSERT INTO stored_properties (property_name,value)
-VALUES ('SCHEDULE_SERVICE_INTERVAL','180'),
+VALUES ('SCHEDULE_SERVICE_INTERVAL','60'),
   ('SCHEDULE_SERVICE_AMOUNT','2'),
   ('EMAIL_FROM_ADDRESS','perevod_rsmu@rsmu.ru'),
   ('EMAIL_FROM_SIGNATURE','Аттестационная комиссия РНИМУ им.Пирогова');

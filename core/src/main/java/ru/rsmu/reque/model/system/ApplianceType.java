@@ -2,6 +2,8 @@ package ru.rsmu.reque.model.system;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author leonid.
@@ -19,6 +21,17 @@ public class ApplianceType implements Serializable {
 
     @Column
     private String description;
+
+    @ManyToMany
+    @JoinTable(name = "appliance_documents",
+            joinColumns = {@JoinColumn(name = "appliance_type_id")},
+            inverseJoinColumns = {@JoinColumn(name = "document_id")}
+    )
+    private List<DocumentName> documents;
+
+    public ApplianceType() {
+        documents = new ArrayList<>();
+    }
 
     public long getId() {
         return id;
@@ -42,5 +55,13 @@ public class ApplianceType implements Serializable {
 
     public void setDescription( String description ) {
         this.description = description;
+    }
+
+    public List<DocumentName> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments( List<DocumentName> documents ) {
+        this.documents = documents;
     }
 }

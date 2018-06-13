@@ -12,12 +12,12 @@
         <th>Полное название</th>
       </tr>
 
-      <c:forEach items="${applianceTypes}" var="type">
+      <c:forEach items="${applianceTypes}" var="document">
         <tr>
           <td>
-            <a href="<c:url value="/admin/ApplianceTypeEdit.htm"><c:param name="id" value="${type.id}"/></c:url> ">${type.name}</a>
+            <a href="<c:url value="/admin/ApplianceTypeEdit.htm"><c:param name="id" value="${document.id}"/></c:url> ">${document.name}</a>
           </td>
-          <td>${type.description}</td>
+          <td>${document.description}</td>
         </tr>
       </c:forEach>
     </table>

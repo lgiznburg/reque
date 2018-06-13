@@ -7,6 +7,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import ru.rsmu.reque.model.registration.Appointment;
 import ru.rsmu.reque.model.system.ApplianceType;
+import ru.rsmu.reque.model.system.DocumentName;
 import ru.rsmu.reque.model.system.User;
 
 import java.util.*;
@@ -110,7 +111,17 @@ public class AppointmentDao extends CommonDao {
     public List<Appointment> findDayAppointments( Date date ) {
         Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( Appointment.class )
                 .add( Restrictions.eq( "scheduledDate", date ) )
-                .addOrder( Order.asc( "scheduledTime") );
+                .addOrder( Order.asc( "scheduledTime" ) );
         return criteria.list();
+    }
+
+    public List<DocumentName> findAllDocuments() {
+        Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( DocumentName.class )
+                .addOrder( Order.asc( "order" ) );
+        return criteria.list();
+    }
+
+    public DocumentName findDocument( long id ) {
+        return (DocumentName) getSessionFactory().getCurrentSession().get( DocumentName.class, id );
     }
 }

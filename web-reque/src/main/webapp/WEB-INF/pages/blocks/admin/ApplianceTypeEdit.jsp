@@ -25,6 +25,13 @@
       <form:errors path="description" cssClass="text-danger" element="span"/>
     </div>
   </div>
+  <div class="form-group row">
+    <form:label path="documents" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Требуемые документы</form:label>
+    <div class="col-sm-5">
+      <form:checkboxes items="${documentNames}" itemLabel="name" itemValue="id" path="documents"  cssClass="form-check-input" element="div"/>
+      <form:errors path="documents" cssClass="text-danger" element="span"/>
+    </div>
+  </div>
 
   <div class="form-group row">
     <div class="col-sm-5">

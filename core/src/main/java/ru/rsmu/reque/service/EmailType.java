@@ -4,9 +4,9 @@ package ru.rsmu.reque.service;
  * @author leonid.
  */
 public enum EmailType {
-    REGISTRATION_CONFIRM( "/web-reque/src/main/resources/emails/RegistrationConfirm.vm","Подтверждение регистрации"),
-    REMINDER( "/web-reque/src/main/resources/emails/Reminder.vm","Подтверждение предварительной записи"),
-    PASSWORD_REMINDER( "/web-reque/src/main/resources/emails/PasswordRemind.vm","");
+    REGISTRATION_CONFIRM( "/emails/RegistrationConfirm.vm","Подтверждение регистрации"),
+    REMINDER( "/emails/Reminder.vm","Подтверждение предварительной записи"),
+    PASSWORD_REMINDER( "/emails/PasswordRemind.vm","Восстановление пароля");
 
     private String fileName;
     private String subject;

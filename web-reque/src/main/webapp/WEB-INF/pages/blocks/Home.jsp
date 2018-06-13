@@ -20,15 +20,22 @@
 
   <sec:authorize access="isAnonymous()">
     <p>Для подачи заявления необходимо <a class="btn btn-primary" href="<c:url value="Registration.htm"/> ">зарегистрироваться</a> </p>
+    <p>Для ускорения подачи Вашего заявления рекомендуем заполнить <a href="https://reg1.rsmu.ru" target="_blank">электронную форму</a> </p>
   </sec:authorize>
   <sec:authorize access="hasAnyRole('ROLE_CLIENT','ROLE_ADMIN')">
     <c:choose>
       <c:when test="${empty appointment}">
         <p><a class="btn btn-primary"  href="<c:url value="SelectCampaign.htm"/> ">Назначить дату и время</a> для подачи заявления. </p>
+        <p>Для ускорения подачи Вашего заявления рекомендуем заполнить <a href="https://reg1.rsmu.ru" target="_blank">электронную форму</a> </p>
       </c:when>
       <c:otherwise>
         <p>Мы Вас ожидаем в  ${fullDate} <%-- <fmt:formatDate value="${appointment.scheduledDate}" pattern="EEEE, dd MMMM"/>--%>
           в <fmt:formatDate value="${appointment.scheduledTime}" pattern="HH:mm"/>. </p>
+        <p>Вам необходимо предоставить следующие документы:
+        <ul>
+          <c:forEach items="${appointment.type.documents}" var="document"><li>${document.name}</li></c:forEach>
+        </ul>
+        </p>
         <p>Вы можете <a class="btn btn-primary" href="<c:url value="/CreateAppointment.htm"><c:param name="id" value="${appointment.id}"/></c:url>">изменить</a> Вашу запись. </p>
       </c:otherwise>
     </c:choose>

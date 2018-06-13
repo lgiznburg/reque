@@ -4,15 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import ru.rsmu.reque.actions.BaseController;
 import ru.rsmu.reque.dao.AppointmentDao;
+import ru.rsmu.reque.editor.DocumentNameEditor;
 import ru.rsmu.reque.model.system.ApplianceType;
+import ru.rsmu.reque.model.system.DocumentName;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author leonid.
@@ -35,6 +36,11 @@ public class ApplianceTypeEdit extends BaseController {
         return type == null ? new ApplianceType() : type;
     }
 
+    @ModelAttribute("documentNames")
+    public List<DocumentName> getDocuments() {
+        return appointmentDao.findAllDocuments();
+    }
+
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.HEAD})
     public String showPage( ModelMap model ) {
         return buildModel( model );
@@ -51,4 +57,8 @@ public class ApplianceTypeEdit extends BaseController {
         return "redirect:/admin/ApplianceTypes.htm";
     }
 
+    @InitBinder
+    public void initBinder( WebDataBinder binder ) {
+        binder.registerCustomEditor( DocumentName.class, new DocumentNameEditor( appointmentDao ) );
+    }
 }

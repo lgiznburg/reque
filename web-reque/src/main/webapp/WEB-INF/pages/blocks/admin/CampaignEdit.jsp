@@ -62,7 +62,7 @@
   <div class="form-group row">
     <form:label path="availableTypes" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Возможные типы обращений</form:label>
     <div class="col-sm-5">
-      <form:checkboxes items="${applianceTypes}" itemLabel="name" itemValue="id" path="availableTypes"  cssClass="form-check-input" />
+      <form:checkboxes items="${applianceTypes}" itemLabel="name" itemValue="id" path="availableTypes"  cssClass="form-check-input" element="div"/>
       <form:errors path="availableTypes" cssClass="text-danger" element="span"/>
     </div>
   </div>

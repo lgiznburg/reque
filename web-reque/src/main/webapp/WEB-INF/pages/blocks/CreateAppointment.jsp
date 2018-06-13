@@ -79,6 +79,13 @@
       <form:errors path="onlineNumber" element="span" cssClass="text-danger" />
     </div>
   </div>
+  <div class="row">
+    <div class="col-sm-5 offset-2 small text-info">
+      <p>Для ускорения подачи Вашего заявления рекомендуем заполнить <a href="https://reg1.rsmu.ru" target="_blank">электронную форму</a></p>
+      <p>Код регистрации этой электронной формы необходимо указать в предыдущем поле.</p>
+      <p>Если Вы по каким-то причинам не желаете заполнять онлайн форму, введите последние 4 цифры номера Вашего паспорта.</p>
+    </div>
+  </div>
   <div class="form-group row">
     <form:label path="type" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Тип заявления <sup>*</sup></form:label>
     <div class="col-sm-5">
