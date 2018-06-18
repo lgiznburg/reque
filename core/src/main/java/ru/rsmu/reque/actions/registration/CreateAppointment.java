@@ -73,9 +73,11 @@ public class CreateAppointment extends BaseController {
 
         Date startTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_START_TIME );
         Date endTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_END_TIME );
+        Date saturdayEndTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_SATURDAY_END_TIME );
         long granularity = propertyService.getPropertyAsLong( StoredPropertyName.SCHEDULE_SERVICE_INTERVAL );
         int amount = propertyService.getPropertyAsInt( StoredPropertyName.SCHEDULE_SERVICE_AMOUNT );
         long dayAmount = (endTime.getTime() - startTime.getTime()) / (60000 * granularity) * amount;
+        long saturdayAmount = (saturdayEndTime.getTime() - startTime.getTime()) / (60000 * granularity) * amount;
 
         Map<Date,Long> countByDates = appointmentDao.findDates( startDate, endDate );
 
@@ -90,7 +92,23 @@ public class CreateAppointment extends BaseController {
                 map.put( "message", "Weekend" );
                 dates.add( map );
             }
-            if ( countByDates.get( calendar.getTime() ) != null && countByDates.get( calendar.getTime() ) >= dayAmount ) {
+            else if ( calendar.get( Calendar.DAY_OF_WEEK ) == Calendar.SATURDAY ) {
+                if ( propertyService.getPropertyAsInt( StoredPropertyName.SHEDULE_WORKING_ON_SATURDAY ) > 0 ) {
+                    if ( countByDates.get( calendar.getTime() ) != null && countByDates.get( calendar.getTime() ) >= saturdayAmount ) {
+                        Map<String,Object> map = new HashMap<>();
+                        map.put( "date", calendar.getTime() );
+                        map.put( "message", "Not available" );
+                        dates.add( map );
+                    }
+                }
+                else {
+                    Map<String,Object> map = new HashMap<>();
+                    map.put( "date", calendar.getTime() );
+                    map.put( "message", "Weekend" );
+                    dates.add( map );
+                }
+            }
+            else if ( countByDates.get( calendar.getTime() ) != null && countByDates.get( calendar.getTime() ) >= dayAmount ) {
                 Map<String,Object> map = new HashMap<>();
                 map.put( "date", calendar.getTime() );
                 map.put( "message", "Not available" );

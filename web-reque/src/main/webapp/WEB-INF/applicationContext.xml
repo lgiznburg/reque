@@ -86,9 +86,12 @@
                 />
         <security:logout logout-url="/logout" logout-success-url="/home.htm?logout=1" />
         <security:remember-me key="rsmuRequeRememberKey" user-service-ref="userDao" />
-        <security:csrf/>
+        <security:csrf token-repository-ref="tokenRepository"/>
         <security:access-denied-handler error-page="/home.htm?access_denied"/>
     </security:http>
+
+    <bean id="tokenRepository"
+          class="org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository"/>
 
     <security:authentication-manager>
         <security:authentication-provider user-service-ref="userDao">

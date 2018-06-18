@@ -55,17 +55,40 @@ public class GetAppointmentTimes {
                 }
                 else {
                     if ( startInterval != 0 ) {
-                        oneInterval.add( String.format( "%d:%d", startInterval/60, startInterval%60 + granularity ) );
+                        oneInterval.add( String.format( "%d:%02d", startInterval/60, startInterval%60 + granularity ) );
                         disableIntervals.add( oneInterval );
                         oneInterval = new ArrayList<>();
                     }
-                    oneInterval.add( String.format( "%d:%d", hour, minute ) );
+                    oneInterval.add( String.format( "%d:%02d", hour, minute ) );
                     startInterval = timeNum;
                 }
             }
         }
         if ( startInterval != 0 ) {
-            oneInterval.add( String.format( "%d:%d", startInterval/60, startInterval%60 + granularity ) );
+            oneInterval.add( String.format( "%d:%02d", startInterval/60, startInterval%60 + granularity ) );
+            disableIntervals.add( oneInterval );
+        }
+        Date endTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_END_TIME );
+        Date saturdayEndTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_SATURDAY_END_TIME );
+
+        Calendar checkingDay = Calendar.getInstance();
+        checkingDay.setTime( date );
+        if ( propertyService.getPropertyAsInt( StoredPropertyName.SHEDULE_WORKING_ON_SATURDAY ) > 0
+                && checkingDay.get( Calendar.DAY_OF_WEEK ) == Calendar.SATURDAY
+                && endTime.after( saturdayEndTime ) ) {
+            Calendar saturday = Calendar.getInstance();
+            saturday.setTime( saturdayEndTime );
+            int hour1 = saturday.get( Calendar.HOUR_OF_DAY );
+            int minute1 = saturday.get( Calendar.MINUTE );
+
+            Calendar normalDay = Calendar.getInstance();
+            normalDay.setTime( endTime );
+            int hour2 = normalDay.get( Calendar.HOUR_OF_DAY );
+            int minute2 = normalDay.get( Calendar.MINUTE );
+
+            oneInterval = new ArrayList<>();
+            oneInterval.add( String.format( "%d:%02d", hour1, minute1 ) );
+            oneInterval.add( String.format( "%d:%02d", hour2, minute2 ) );
             disableIntervals.add( oneInterval );
         }
 

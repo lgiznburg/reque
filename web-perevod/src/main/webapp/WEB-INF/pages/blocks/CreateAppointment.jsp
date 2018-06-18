@@ -37,7 +37,7 @@
     });
 
     <c:if test="${appointment.id ne 0}">
-    showTime( $("#scheduledTime").datepicker( "getDate" ) );
+    showTime( '<fmt:formatDate value="${appointment.scheduledDate}" pattern="dd.MM.yyyy"/>' );
     </c:if>
 
   });
