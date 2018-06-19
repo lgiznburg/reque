@@ -15,7 +15,11 @@
     </tr>
     <c:forEach items="${stats}" var="entry">
       <tr>
-        <td align="center"><fmt:formatDate value="${entry.key}" pattern="EEE, d MMM yyyy"/></td>
+        <td align="center"><fmt:formatDate value="${entry.key}" pattern="dd.MM.yyyy" var="testDate"/>
+          <a href="<c:url value="/admin/DayStats.htm"><c:param name="testDate" value="${testDate}"/></c:url>">
+          <fmt:formatDate value="${entry.key}" pattern="EEE, d MMM yyyy"/>
+          </a>
+        </td>
         <c:set var="dayStats" value="${entry.value}"/>
         <c:forEach items="${types}" var="appType">
           <td align="center">${dayStats[appType]}</td>

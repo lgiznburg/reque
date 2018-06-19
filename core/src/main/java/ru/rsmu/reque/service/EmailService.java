@@ -15,7 +15,11 @@ import org.springframework.stereotype.Service;
 import ru.rsmu.reque.model.system.StoredPropertyName;
 import ru.rsmu.reque.model.system.User;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -87,13 +91,20 @@ public class EmailService {
         if (hostPort > 0)
             htmlEmail.setSmtpPort(hostPort);
 
-        htmlEmail.setStartTLSEnabled(useTls);
+        htmlEmail.setStartTLSEnabled( useTls );
         htmlEmail.setSSLOnConnect( useSsl );
         htmlEmail.setSslSmtpPort( hostSslPort );
 
         htmlEmail.setFrom( propertyService.getProperty( StoredPropertyName.EMAIL_FROM_ADDRESS ),
                 propertyService.getProperty( StoredPropertyName.EMAIL_FROM_SIGNATURE ),
                 "UTF-8" );
+        try {
+            List<InternetAddress> replyToAddresses = new ArrayList<>();
+            replyToAddresses.add( new InternetAddress("noreply@rsmu.ru") );
+            htmlEmail.setReplyTo( replyToAddresses );
+        } catch (AddressException e) {
+            // what?
+        }
 
         htmlEmail.setSubject( emailType.getSubject() );
         htmlEmail.setHtmlMsg( generateEmailMessage( emailType.getFileName(), model ) );

@@ -74,8 +74,9 @@ public class AppointmentDao extends CommonDao {
         if ( date != null ) {
             criteria.add( Restrictions.eq( "scheduledDate", date ) );
         }
+        criteria.addOrder( Order.asc( "scheduledDate" ) );
         List result = criteria.list(); //query.list();
-        Map<Date,Map<ApplianceType,Long>> stats = new HashMap<>();
+        Map<Date,Map<ApplianceType,Long>> stats = new TreeMap<>();
         Date current = null;
         Map<ApplianceType,Long> day = new HashMap<>();
         for ( Object object : result ) {

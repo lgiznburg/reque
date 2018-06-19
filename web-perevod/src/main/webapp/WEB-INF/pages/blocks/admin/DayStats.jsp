@@ -17,7 +17,7 @@
 <div>
   <h2>Данные на день</h2>
 
-  <form action="<c:url value="/admin/DayStats.htm"/>" method="get">
+  <form action="<c:url value="/admin/DayStats.htm"/>" method="post">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
     <div class="form-group row">
       <label class="col-sm-2 col-form-label" for="testDate">Дата</label>
