@@ -17,7 +17,6 @@ import java.util.List;
  * @author leonid.
  */
 @Controller
-@RequestMapping(value = "/SelectCampaign.htm")
 public class SelectCampaign extends BaseController {
 
     @Autowired
@@ -33,7 +32,7 @@ public class SelectCampaign extends BaseController {
         return campaignDao.findAvailableCampaigns( new Date() );
     }
 
-    @RequestMapping( method = {RequestMethod.GET, RequestMethod.HEAD} )
+    @RequestMapping(value = "/SelectCampaign.htm", method = {RequestMethod.GET, RequestMethod.HEAD} )
     public String showPage( ModelMap model,
                             @ModelAttribute("campaigns") List<ReceptionCampaign> campaigns) {
         if ( campaigns.size() == 1 ) {
@@ -41,4 +40,16 @@ public class SelectCampaign extends BaseController {
         }
         return buildModel( model );
     }
+
+    @RequestMapping(value = "/admin/SelectCampaign.htm", method = {RequestMethod.GET, RequestMethod.HEAD} )
+    public String showPageServiceman( ModelMap model,
+                            @ModelAttribute("campaigns") List<ReceptionCampaign> campaigns) {
+        if ( campaigns.size() == 1 ) {
+            return String .format( "redirect:/admin/CreateTodayAppointment.htm?campaign=%d", campaigns.get( 0 ).getId() );
+        }
+        String view = buildModel( model );
+        model.addAttribute( CONTENT, "/WEB-INF/pages/blocks/admin/SelectTodayCampaign.jsp" );
+        return view;
+    }
+
 }

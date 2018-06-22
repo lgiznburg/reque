@@ -6,7 +6,8 @@ package ru.rsmu.reque.service;
 public enum EmailType {
     REGISTRATION_CONFIRM( "/emails/RegistrationConfirm.vm","Подтверждение регистрации"),
     REMINDER( "/emails/Reminder.vm","Подтверждение предварительной записи"),
-    PASSWORD_REMINDER( "/emails/PasswordRemind.vm","Восстановление пароля");
+    PASSWORD_REMINDER( "/emails/PasswordRemind.vm","Восстановление пароля"),
+    REGISTRATION_BY_ADMIN("/emails/RegistrationByAdmin.vm","Подтверждение регистрации сотрудником приемной комиссии");
 
     private String fileName;
     private String subject;

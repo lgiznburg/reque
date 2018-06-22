@@ -33,6 +33,13 @@
     </div>
   </form>
 
+  <div class="row">
+    <div class="col-sm-10">
+      <fmt:formatDate value="${testDate}" pattern="dd.MM.yyyy" var="strTestDate"/>
+      <a target="_blank" class="btn btn-outline-info" href="<c:url value="/admin/DayStats.htm"><c:param name="testDate" value="${strTestDate}"/><c:param name="print" value="1"/></c:url>">Печать списка</a>
+      <a target="_blank" class="btn btn-outline-info" href="<c:url value="/admin/DayStats.htm"><c:param name="testDate" value="${strTestDate}"/><c:param name="ticket" value="1"/></c:url>">Печать талонов</a>
+    </div>
+  </div>
   <table class="table" >
     <tr>
       <th>Дата</th>

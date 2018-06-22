@@ -55,7 +55,8 @@ public class GetAppointmentTimes {
                 }
                 else {
                     if ( startInterval != 0 ) {
-                        oneInterval.add( String.format( "%d:%02d", startInterval/60, startInterval%60 + granularity ) );
+                        int endInterval = startInterval + granularity;
+                        oneInterval.add( String.format( "%d:%02d", endInterval/60, endInterval%60 ) );
                         disableIntervals.add( oneInterval );
                         oneInterval = new ArrayList<>();
                     }
@@ -65,7 +66,8 @@ public class GetAppointmentTimes {
             }
         }
         if ( startInterval != 0 ) {
-            oneInterval.add( String.format( "%d:%02d", startInterval/60, startInterval%60 + granularity ) );
+            int endInterval = startInterval + granularity;
+            oneInterval.add( String.format( "%d:%02d", endInterval/60, endInterval%60 ) );
             disableIntervals.add( oneInterval );
         }
         Date endTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_END_TIME );
@@ -73,7 +75,7 @@ public class GetAppointmentTimes {
 
         Calendar checkingDay = Calendar.getInstance();
         checkingDay.setTime( date );
-        if ( propertyService.getPropertyAsInt( StoredPropertyName.SHEDULE_WORKING_ON_SATURDAY ) > 0
+        if ( propertyService.getPropertyAsInt( StoredPropertyName.SCHEDULE_WORKING_ON_SATURDAY ) > 0
                 && checkingDay.get( Calendar.DAY_OF_WEEK ) == Calendar.SATURDAY
                 && endTime.after( saturdayEndTime ) ) {
             Calendar saturday = Calendar.getInstance();

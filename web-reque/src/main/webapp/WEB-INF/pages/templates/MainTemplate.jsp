@@ -31,29 +31,27 @@
 
 <c:import url="/WEB-INF/pages/static/Header.jsp"/>
 
-<c:set var="isAdmin" value="false"/>
-<sec:authorize access="hasRole('ROLE_ADMIN')"><c:set var="isAdmin" value="true"/></sec:authorize>
-
-
 <div class="container" role="main">
-  <c:choose>
-    <c:when test="${isAdmin}">
-      <div class="container-fluid">
-        <div class="row">
+
+  <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SERVICEMAN')">
+    <div class="container-fluid">
+      <div class="row">
         <div class="col-sm-2 sidebar">
           <c:import url="/WEB-INF/pages/static/AdminMenu.jsp"/>
         </div>
         <div class="col-sm-10">
           <c:import url="${content}"/>
         </div>
-        </div>
       </div>
-    </c:when>
-    <c:otherwise>
-      <c:import url="${content}"/>
-    </c:otherwise>
-  </c:choose>
+    </div>
+  </sec:authorize>
+
+  <sec:authorize access="not hasAnyRole('ROLE_ADMIN','ROLE_SERVICEMAN')">
+    <c:import url="${content}"/>
+  </sec:authorize>
+
 </div>
+
 
 <!-- Bootstrap core JavaScript
 ================================================== -->

@@ -117,4 +117,8 @@ public class Appointment implements Serializable {
     public void setRepeated( boolean repeated ) {
         this.repeated = repeated;
     }
+
+    public String getCompoundId() {
+        return String.format( "%d_%s", id, onlineNumber.replaceAll( "\\D", "" ) );
+    }
 }

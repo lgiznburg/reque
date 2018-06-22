@@ -11,10 +11,7 @@ import ru.rsmu.reque.editor.DateTimeEditor;
 import ru.rsmu.reque.model.registration.Appointment;
 import ru.rsmu.reque.model.system.ApplianceType;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author leonid.
@@ -70,6 +67,30 @@ public class DayStats extends BaseController {
     public String showStats( ModelMap model ) {
         return buildModel( model );
     }
+
+    @RequestMapping(method = {RequestMethod.GET, RequestMethod.HEAD, RequestMethod.POST}, params = "print")
+    public String showStatsForPrint( ModelMap model ) {
+        buildModel( model );
+        return "/blocks/admin/PrintDayStats";
+    }
+
+    @RequestMapping(method = {RequestMethod.GET, RequestMethod.HEAD, RequestMethod.POST}, params = "ticket")
+    public String showStatsForTicketPrint( ModelMap model ) {
+        buildModel( model );
+        return "/blocks/admin/PrintDayTickets";
+    }
+
+    @RequestMapping(method = {RequestMethod.GET, RequestMethod.HEAD, RequestMethod.POST}, params = {"ticket","appointment"})
+    public String showCreatedForTicketPrint( ModelMap model,
+                                             @RequestParam("appointment") Long appointmentId) {
+        Appointment appointment = appointmentDao.findAppointment( appointmentId );
+        List<Appointment> appointments = new ArrayList<>();
+        appointments.add( appointment );
+        model.addAttribute( "appointments", appointments );
+        buildModel( model );
+        return "/blocks/admin/PrintDayTickets";
+    }
+
 
     @InitBinder
     public void initBinder( WebDataBinder binder ) {

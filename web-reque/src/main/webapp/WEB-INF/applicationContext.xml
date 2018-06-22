@@ -74,6 +74,10 @@
 <!-- *** Security configuration -->
 
     <security:http auto-config="true" use-expressions="true">
+        <security:intercept-url pattern="/admin/Statistics.htm" access="hasAnyRole('ROLE_ADMIN', 'ROLE_SERVICEMAN')"/>
+        <security:intercept-url pattern="/admin/DayStats.htm" access="hasAnyRole('ROLE_ADMIN', 'ROLE_SERVICEMAN')"/>
+        <security:intercept-url pattern="/admin/CreateTodayAppointment.htm" access="hasAnyRole('ROLE_ADMIN', 'ROLE_SERVICEMAN')"/>
+        <security:intercept-url pattern="/admin/SelectCampaign.htm" access="hasAnyRole('ROLE_ADMIN', 'ROLE_SERVICEMAN')"/>
         <security:intercept-url pattern="/admin/*" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/CreateAppointment.htm" access="hasAnyRole('ROLE_CLIENT','ROLE_ADMIN')"/>
 

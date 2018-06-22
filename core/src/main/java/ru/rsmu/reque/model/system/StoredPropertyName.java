@@ -8,7 +8,7 @@ public enum StoredPropertyName {
     SCHEDULE_END_SERVICE_DATE("Schedule", "2.End service date", "1-09-2018", StoredPropertyType.DATE),
     SCHEDULE_START_TIME("Schedule", "3.Start time", "10:00", StoredPropertyType.TIME),
     SCHEDULE_END_TIME("Schedule", "4.End time", "16:00", StoredPropertyType.TIME),
-    SHEDULE_WORKING_ON_SATURDAY("Schedule", "5.Is Saturday working day", "1",StoredPropertyType.INTEGER),
+    SCHEDULE_WORKING_ON_SATURDAY("Schedule", "5.Is Saturday working day", "1",StoredPropertyType.INTEGER),
     SCHEDULE_SATURDAY_END_TIME("Schedule", "6.End time on Saturday", "14:00", StoredPropertyType.TIME),
     SCHEDULE_SERVICE_INTERVAL("Schedule", "7.Service interval (min)", "15", StoredPropertyType.INTEGER, false),
     SCHEDULE_SERVICE_AMOUNT("Schedule", "8.How many customers could be served in the interval", "30", StoredPropertyType.INTEGER),

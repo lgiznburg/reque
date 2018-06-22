@@ -1,14 +1,18 @@
-package ru.rsmu.reque.actions.registration;
+package ru.rsmu.reque.actions.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.rsmu.reque.actions.BaseController;
+import ru.rsmu.reque.actions.admin.form.TodayAppointmentForm;
 import ru.rsmu.reque.dao.AppointmentDao;
+import ru.rsmu.reque.dao.IUserDao;
 import ru.rsmu.reque.dao.ReceptionCampaignDao;
+import ru.rsmu.reque.dao.UserDao;
 import ru.rsmu.reque.editor.ApplianceTypeEditor;
 import ru.rsmu.reque.editor.DateTimeEditor;
 import ru.rsmu.reque.editor.ReceptionCampaignEditor;
@@ -31,8 +35,8 @@ import java.util.*;
  * @author leonid.
  */
 @Controller
-@RequestMapping(value = "/CreateAppointment.htm")
-public class CreateAppointment extends BaseController {
+@RequestMapping(value = "/admin/CreateTodayAppointment.htm")
+public class CreateTodayAppointment extends BaseController {
 
     @Autowired
     private StoredPropertyService propertyService;
@@ -46,24 +50,23 @@ public class CreateAppointment extends BaseController {
     @Autowired
     private EmailService emailService;
 
-    public CreateAppointment() {
-        setTitle( "Определить дату визита" );
-        setContent( "/WEB-INF/pages/blocks/CreateAppointment.jsp" );
+    @Autowired
+    private Validator validator;
+
+    @Autowired
+    private IUserDao userDao;
+
+    public CreateTodayAppointment() {
+        setTitle( "Назначить время на сегодня" );
+        setContent( "/WEB-INF/pages/blocks/admin/CreateTodayAppointment.jsp" );
     }
 
-    @ModelAttribute("availableDates")
+   /* @ModelAttribute("availableDates")
     public List<Map<String, Object>> getAvailableDates( ModelMap model,
-                                                        @RequestParam(value = "campaign", required = false) ReceptionCampaign campaign ) {
-        Appointment appointment = (Appointment) model.get( "appointmentToCreate" );
-        if ( appointment == null ) {
-            appointment = getAppointment( campaign );
-        }
-        if ( appointment == null || appointment.getCampaign() == null ) {
-            return Collections.emptyList();
-        }
+                                                        @RequestParam(value = "campaign") ReceptionCampaign campaign ) {
 
-        Date startDate = appointment.getCampaign().getStartDate();
-        Date endDate = appointment.getCampaign().getEndDate();
+        Date startDate = campaign.getStartDate();
+        Date endDate = campaign.getEndDate();
 
         Calendar calendar = Calendar.getInstance();
         calendar.set( Calendar.HOUR_OF_DAY, 0 );
@@ -118,45 +121,35 @@ public class CreateAppointment extends BaseController {
         }
         return dates;
     }
-
+*/
     @ModelAttribute("startDate")
     public Date getStartDate( ModelMap model,
-                              @RequestParam(value = "campaign", required = false) ReceptionCampaign campaign ) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add( Calendar.DAY_OF_YEAR, 1 );
-
-        Appointment appointment = (Appointment) model.get( "appointmentToCreate" );
-        if ( appointment == null ) {
-            appointment = getAppointment( campaign );
-        }
-        if ( appointment == null || appointment.getCampaign() == null ) {
-            return calendar.getTime();
-        }
-        Date startDate = appointment.getCampaign().getStartDate();
+                              @RequestParam(value = "campaign") ReceptionCampaign campaign ) {
+        Calendar calendar = Calendar.getInstance(); // today
+        Date startDate = campaign.getStartDate();
+        // it's too strict condition. today is always in selected campaign dates
         return startDate.before( calendar.getTime() ) ? calendar.getTime() : startDate;
     }
 
-    @ModelAttribute("endDate")
-    public Date getEndDate( ModelMap model,
-                            @RequestParam(value = "campaign", required = false) ReceptionCampaign campaign ) {
-        Appointment appointment = (Appointment) model.get( "appointmentToCreate" );
-        if ( appointment == null ) {
-            appointment = getAppointment( campaign );
-        }
-        if ( appointment == null || appointment.getCampaign() == null ) {
-            return new Date();
-        }
-        return appointment.getCampaign().getEndDate();
-    }
-
-    @ModelAttribute("granularity")
+   @ModelAttribute("granularity")
     public int getGranularity() {
         return propertyService.getPropertyAsInt( StoredPropertyName.SCHEDULE_SERVICE_INTERVAL );
     }
 
     @ModelAttribute("startTime")
     public Date getStartTime() {
-        return propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_START_TIME );
+        Calendar startTime = Calendar.getInstance();
+        Calendar rowStartTime = Calendar.getInstance();
+        rowStartTime.setTime( propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_START_TIME ) );
+        startTime.set( Calendar.HOUR_OF_DAY, rowStartTime.get( Calendar.HOUR_OF_DAY ) );
+        startTime.set( Calendar.MINUTE, rowStartTime.get( Calendar.MINUTE ) );
+
+        int interval = propertyService.getPropertyAsInt( StoredPropertyName.SCHEDULE_SERVICE_INTERVAL );
+        Date current = new Date();
+        while ( current.after( startTime.getTime() ) ) {
+            startTime.add( Calendar.MINUTE, interval );
+        }
+        return startTime.getTime();
     }
 
     @ModelAttribute("endTime")
@@ -173,29 +166,16 @@ public class CreateAppointment extends BaseController {
     }
 
     @ModelAttribute("appointmentToCreate")
-    public Appointment getAppointment( @RequestParam(value = "campaign", required = false) ReceptionCampaign campaign ) {
-        User user = getUser();
-        Date dateNow = new Date();
-        Appointment appointment = appointmentDao.findAppointment( user, dateNow );
-        if ( appointment == null ) {
-            appointment = new Appointment();
-            appointment.setCampaign( campaign );
-        }
-
-        return appointment;
+    public TodayAppointmentForm getAppointment( @RequestParam(value = "campaign") ReceptionCampaign campaign ) {
+        TodayAppointmentForm appointmentForm = new TodayAppointmentForm();
+        appointmentForm.setCampaign( campaign );
+        return appointmentForm;
     }
 
     @ModelAttribute("applianceTypes")
     public List<ApplianceType> getApplianceTypes( ModelMap model,
-                                                  @RequestParam(value = "campaign", required = false) ReceptionCampaign campaign ) {
-        Appointment appointment = (Appointment) model.get( "appointmentToCreate" );
-        if ( appointment == null ) {
-            appointment = getAppointment( campaign );
-        }
-        if ( appointment == null || appointment.getCampaign() == null ) {
-            return Collections.emptyList();
-        }
-        return appointment.getCampaign().getAvailableTypes();
+                                                  @RequestParam(value = "campaign") ReceptionCampaign campaign ) {
+        return campaign.getAvailableTypes();
     }
 
     @InitBinder
@@ -204,29 +184,43 @@ public class CreateAppointment extends BaseController {
         binder.registerCustomEditor( Time.class, new DateTimeEditor( true ) );
         binder.registerCustomEditor( ApplianceType.class, new ApplianceTypeEditor( appointmentDao ) );
         binder.registerCustomEditor( ReceptionCampaign.class, new ReceptionCampaignEditor( campaignDao ) );
+        if ( binder.getTarget() instanceof TodayAppointmentForm ) {
+            binder.setValidator( validator );
+        }
     }
 
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.HEAD})
     public String showPage( ModelMap model,
-                            @ModelAttribute("appointmentToCreate") Appointment appointment) {
-        if ( appointment.getCampaign() == null ) {
-            return "redirect:/SelectCampaign.htm";
-        }
+                            @ModelAttribute("appointmentToCreate") TodayAppointmentForm appointmentForm) {
         return buildModel( model );
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public String saveAppointment( ModelMap model,
-                                   @ModelAttribute("appointmentToCreate") @Valid Appointment appointment,
+                                   @ModelAttribute("appointmentToCreate") @Valid TodayAppointmentForm appointmentForm,
                                    BindingResult errors ) {
         if ( errors.hasErrors() ) {
             return buildModel( model );
         }
-        User user = getUser();
-        appointment.setUser( user );
+        User user = userDao.findUser( appointmentForm.getUserEmail() );
+        if ( user == null ) {
+            user = createUser( appointmentForm );
+            userDao.saveUser( user );
+        }
+        Appointment appointment = appointmentDao.findAppointment( user, new Date() );
+        if ( appointment == null ) {
+            appointment = new Appointment();
+            appointment.setUser( user );
+        }
+        appointment.setCampaign( appointmentForm.getCampaign() );
+        appointment.setOnlineNumber( appointmentForm.getOnlineNumber() );
+        appointment.setScheduledDate( new Date() ); //today
+        appointment.setScheduledTime( appointmentForm.getScheduledTime() );
+        appointment.setType( appointmentForm.getType() );
+
         appointmentDao.saveEntity( appointment );
 
-        Calendar appointmentDate = Calendar.getInstance();
+        /*Calendar appointmentDate = Calendar.getInstance();
         appointmentDate.setTime( appointment.getScheduledDate() );
         Calendar time = Calendar.getInstance();
         time.setTime( appointment.getScheduledTime() );
@@ -239,16 +233,30 @@ public class CreateAppointment extends BaseController {
         emailContext.put( "user", user );
         emailContext.put( "appointment", appointment );
 
-        emailService.sendEmail( user, EmailType.REMINDER, emailContext );
+        emailService.sendEmail( user, EmailType.REMINDER, emailContext );*/
 
-        return "redirect:/home.htm";
+        model.addAttribute( "createdAppointment", appointment );
+        String view = buildModel( model );
+        model.addAttribute( CONTENT, "/WEB-INF/pages/blocks/admin/CreateTodayAppointmentSuccess.jsp" );
+        return view;
     }
 
-    @RequestMapping(method = RequestMethod.POST, params = "delete")
-    public String deleteAppointment( ModelMap model,
-                                     @ModelAttribute("appointmentToCreate") Appointment appointment ) {
+    private User createUser( TodayAppointmentForm appointmentForm ) {
+        User user = new User();
+        user.setUsername( appointmentForm.getUserEmail() );
+        user.setFirstName( appointmentForm.getFirstName() );
+        user.setLastName( appointmentForm.getLastName() );
+        user.setPassword( "undefined" );
+        user.setPhoneNumber( "" );
+        user.setCreatedTime( new Date() );
+        user.setLastUpdated( new Date() );
 
-        appointmentDao.deleteEntity( appointment );
-        return "redirect:/home.htm";
+        Map<String,Object> emailContext = new HashMap<>();
+        emailContext.put( "user", user );
+        emailService.sendEmail( user, EmailType.REGISTRATION_BY_ADMIN, emailContext );
+
+
+        return user;
     }
+
 }
