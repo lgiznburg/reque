@@ -18,9 +18,7 @@ import ru.rsmu.reque.editor.DateTimeEditor;
 import ru.rsmu.reque.editor.ReceptionCampaignEditor;
 import ru.rsmu.reque.model.registration.Appointment;
 import ru.rsmu.reque.model.registration.ReceptionCampaign;
-import ru.rsmu.reque.model.system.ApplianceType;
-import ru.rsmu.reque.model.system.StoredPropertyName;
-import ru.rsmu.reque.model.system.User;
+import ru.rsmu.reque.model.system.*;
 import ru.rsmu.reque.service.EmailService;
 import ru.rsmu.reque.service.EmailType;
 import ru.rsmu.reque.service.StoredPropertyService;
@@ -250,6 +248,14 @@ public class CreateTodayAppointment extends BaseController {
         user.setPhoneNumber( "" );
         user.setCreatedTime( new Date() );
         user.setLastUpdated( new Date() );
+        if ( user.getUserRoles() == null ) {
+            user.setUserRoles( new ArrayList<>() );
+        }
+        if ( user.getUserRoles().isEmpty() ) {
+            UserRole role = userDao.findRole( UserRoleName.ROLE_CLIENT );
+            user.getUserRoles().add( role );
+        }
+        user.setEnabled( true );
 
         Map<String,Object> emailContext = new HashMap<>();
         emailContext.put( "user", user );

@@ -51,6 +51,9 @@ public class Appointment implements Serializable {
     @NotNull
     private ReceptionCampaign campaign;
 
+    @Column
+    private boolean enabled = true;
+
     @Formula( "(select case when count(app.id)>1 then 1 else 0 end from appointments app where app.client_id=client_id)" )
     private boolean repeated;
 
@@ -120,5 +123,13 @@ public class Appointment implements Serializable {
 
     public String getCompoundId() {
         return String.format( "%d_%s", id, onlineNumber.replaceAll( "\\D", "" ) );
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled( boolean enabled ) {
+        this.enabled = enabled;
     }
 }

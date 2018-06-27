@@ -9,13 +9,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.rsmu.reque.dao.AppointmentDao;
+import ru.rsmu.reque.dao.ReceptionCampaignDao;
 import ru.rsmu.reque.editor.DateTimeEditor;
+import ru.rsmu.reque.editor.ReceptionCampaignEditor;
+import ru.rsmu.reque.model.registration.ReceptionCampaign;
 import ru.rsmu.reque.model.system.StoredPropertyName;
+import ru.rsmu.reque.service.AppointmentHelper;
 import ru.rsmu.reque.service.StoredPropertyService;
 
 import java.util.*;
@@ -24,8 +25,11 @@ import java.util.*;
  * @author leonid.
  */
 @Controller
-@RequestMapping(value = "/ajax/GetAppointmentTimes.htm")
+@RequestMapping()
 public class GetAppointmentTimes {
+
+    @Autowired
+    private ReceptionCampaignDao campaignDao;
 
     @Autowired
     private AppointmentDao appointmentDao;
@@ -33,66 +37,28 @@ public class GetAppointmentTimes {
     @Autowired
     private StoredPropertyService propertyService;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<String> getTimes( @RequestParam(value = "date")Date date ) {
+    @Autowired
+    private AppointmentHelper appointmentHelper;
 
-        int granularity = propertyService.getPropertyAsInt( StoredPropertyName.SCHEDULE_SERVICE_INTERVAL );
-        long amount = propertyService.getPropertyAsLong( StoredPropertyName.SCHEDULE_SERVICE_AMOUNT );
-        Map<Date, Long> times = appointmentDao.findHours( date );
 
-        List<List<String>> disableIntervals = new ArrayList<>();
-        List<String> oneInterval = new ArrayList<>();
-        int startInterval = 0;
-        for ( Date time : times.keySet() ) {
-            if ( times.get( time ) >= amount ) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime( time );
-                int hour = calendar.get( Calendar.HOUR_OF_DAY );
-                int minute = calendar.get( Calendar.MINUTE );
-                int timeNum = hour * 60 + minute;
-                if ( startInterval + granularity == timeNum ) {
-                    startInterval = timeNum;
-                }
-                else {
-                    if ( startInterval != 0 ) {
-                        int endInterval = startInterval + granularity;
-                        oneInterval.add( String.format( "%d:%02d", endInterval/60, endInterval%60 ) );
-                        disableIntervals.add( oneInterval );
-                        oneInterval = new ArrayList<>();
-                    }
-                    oneInterval.add( String.format( "%d:%02d", hour, minute ) );
-                    startInterval = timeNum;
-                }
-            }
-        }
-        if ( startInterval != 0 ) {
-            int endInterval = startInterval + granularity;
-            oneInterval.add( String.format( "%d:%02d", endInterval/60, endInterval%60 ) );
-            disableIntervals.add( oneInterval );
-        }
-        Date endTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_END_TIME );
-        Date saturdayEndTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_SATURDAY_END_TIME );
+    @RequestMapping(value = "/ajax/{campaign}/GetAppointmentTimes.htm", method = RequestMethod.GET)
+    public ResponseEntity<String> getTimes( @PathVariable("campaign") ReceptionCampaign campaign,
+                                            @RequestParam(value = "date")Date date ) {
 
-        Calendar checkingDay = Calendar.getInstance();
-        checkingDay.setTime( date );
-        if ( propertyService.getPropertyAsInt( StoredPropertyName.SCHEDULE_WORKING_ON_SATURDAY ) > 0
-                && checkingDay.get( Calendar.DAY_OF_WEEK ) == Calendar.SATURDAY
-                && endTime.after( saturdayEndTime ) ) {
-            Calendar saturday = Calendar.getInstance();
-            saturday.setTime( saturdayEndTime );
-            int hour1 = saturday.get( Calendar.HOUR_OF_DAY );
-            int minute1 = saturday.get( Calendar.MINUTE );
+        List<List<String>> disableIntervals = appointmentHelper.getDateTimes( date, campaign );
 
-            Calendar normalDay = Calendar.getInstance();
-            normalDay.setTime( endTime );
-            int hour2 = normalDay.get( Calendar.HOUR_OF_DAY );
-            int minute2 = normalDay.get( Calendar.MINUTE );
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType( MediaType.APPLICATION_JSON );
+        Gson gson = new GsonBuilder().create();
+        String result = gson.toJson( disableIntervals );
+        return new ResponseEntity<String>( result, headers, HttpStatus.OK );
+    }
 
-            oneInterval = new ArrayList<>();
-            oneInterval.add( String.format( "%d:%02d", hour1, minute1 ) );
-            oneInterval.add( String.format( "%d:%02d", hour2, minute2 ) );
-            disableIntervals.add( oneInterval );
-        }
+    @RequestMapping(value = "/ajax/{campaign}/GetTodayAppointmentTimes.htm", method = RequestMethod.GET)
+    public ResponseEntity<String> getTodayTimes( @PathVariable("campaign") ReceptionCampaign campaign,
+                                            @RequestParam(value = "date")Date date ) {
+
+        List<List<String>> disableIntervals = appointmentHelper.getTodayTimes( date, campaign );
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType( MediaType.APPLICATION_JSON );
@@ -104,5 +70,6 @@ public class GetAppointmentTimes {
     @InitBinder
     public void initBinder( WebDataBinder binder ) {
         binder.registerCustomEditor( Date.class, new DateTimeEditor() );
+        binder.registerCustomEditor( ReceptionCampaign.class, new ReceptionCampaignEditor( campaignDao ) );
     }
 }

@@ -73,6 +73,20 @@
       <form:errors path="active" cssClass="text-danger" element="span"/>
     </div>
   </div>
+  <div class="form-group row">
+    <form:label path="priority" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Приоритет</form:label>
+    <div class="col-sm-5">
+      <form:input path="priority"  cssClass="form-control"/>
+      <form:errors path="priority" cssClass="text-danger" element="span"/>
+    </div>
+  </div>
+  <div class="form-group row">
+    <form:label path="concurrentAmount" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Количество принимаемых в конкурентный период</form:label>
+    <div class="col-sm-5">
+      <form:input path="concurrentAmount"  cssClass="form-control"/>
+      <form:errors path="concurrentAmount" cssClass="text-danger" element="span"/>
+    </div>
+  </div>
 
   <div class="form-group row">
     <div class="col-sm-7">

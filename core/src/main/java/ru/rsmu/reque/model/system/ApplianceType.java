@@ -3,7 +3,9 @@ package ru.rsmu.reque.model.system;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author leonid.
@@ -27,10 +29,10 @@ public class ApplianceType implements Serializable {
             joinColumns = {@JoinColumn(name = "appliance_type_id")},
             inverseJoinColumns = {@JoinColumn(name = "document_id")}
     )
-    private List<DocumentName> documents;
+    private Set<DocumentName> documents;
 
     public ApplianceType() {
-        documents = new ArrayList<>();
+        documents = new HashSet<>();
     }
 
     public long getId() {
@@ -57,11 +59,11 @@ public class ApplianceType implements Serializable {
         this.description = description;
     }
 
-    public List<DocumentName> getDocuments() {
+    public Set<DocumentName> getDocuments() {
         return documents;
     }
 
-    public void setDocuments( List<DocumentName> documents ) {
+    public void setDocuments( Set<DocumentName> documents ) {
         this.documents = documents;
     }
 }

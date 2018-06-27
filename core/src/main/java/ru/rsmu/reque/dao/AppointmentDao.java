@@ -1,9 +1,12 @@
 package ru.rsmu.reque.dao;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.ResultTransformer;
+import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 import ru.rsmu.reque.model.registration.Appointment;
 import ru.rsmu.reque.model.system.ApplianceType;
@@ -21,10 +24,11 @@ public class AppointmentDao extends CommonDao {
     public Map<Date, Long> findDates( Date startDate, Date endDate ) {
         Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( Appointment.class )
                 .add( Restrictions.between( "scheduledDate", startDate, endDate ) )
+                .add( Restrictions.eq( "enabled", true ) )
                 .setProjection(
                         Projections.projectionList()
-                        .add( Projections.rowCount() )
-                        .add( Projections.groupProperty( "scheduledDate" ) )
+                                .add( Projections.rowCount() )
+                                .add( Projections.groupProperty( "scheduledDate" ) )
                 );
         List result = criteria.list();
         Map<Date,Long> dates = new HashMap<>();
@@ -35,14 +39,17 @@ public class AppointmentDao extends CommonDao {
         return dates;
     }
 
-    public Map<Date, Long> findHours( Date date ) {
+    public Map<Date, Long> findHours( Date date, int priority ) {
         Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( Appointment.class )
+                .createAlias( "campaign", "campaign" )
+                .add( Restrictions.eq( "campaign.priority", priority ) )
                 .add( Restrictions.eq( "scheduledDate", date ) )
+                .add( Restrictions.eq( "enabled", true ) )
                 .setProjection(
-                        Projections.projectionList()
-                                .add( Projections.rowCount() )
-                                .add( Projections.groupProperty( "scheduledTime" ) )
-                );
+                Projections.projectionList()
+                        .add( Projections.rowCount() )
+                        .add( Projections.groupProperty( "scheduledTime" ) )
+        );
         List result = criteria.list();
         Map<Date,Long> hours = new HashMap<>();
         for ( Object object : result ) {
@@ -66,11 +73,12 @@ public class AppointmentDao extends CommonDao {
 
     public Map<Date, Map<ApplianceType, Long>> findStatistics( Date date ) {
         Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( Appointment.class )
+                .add( Restrictions.eq( "enabled", true ) )
                 .setProjection( Projections.projectionList()
-                                .add( Projections.rowCount() )
-                        .add( Projections.groupProperty( "scheduledDate" ) )
-                        .add( Projections.groupProperty( "type" ) )
-                );
+                            .add( Projections.rowCount() )
+                            .add( Projections.groupProperty( "scheduledDate" ) )
+                            .add( Projections.groupProperty( "type" ) )
+            );
         if ( date != null ) {
             criteria.add( Restrictions.eq( "scheduledDate", date ) );
         }
@@ -104,6 +112,7 @@ public class AppointmentDao extends CommonDao {
     public Appointment findAppointment( User user, Date date ) {
         Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( Appointment.class )
                 .add( Restrictions.eq( "user", user ) )
+                .add( Restrictions.eq( "enabled", true ) )
                 .add( Restrictions.gt( "scheduledDate", date ) )
                 .setMaxResults( 1 );
         return (Appointment) criteria.uniqueResult();
@@ -112,8 +121,25 @@ public class AppointmentDao extends CommonDao {
     public List<Appointment> findDayAppointments( Date date ) {
         Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( Appointment.class )
                 .add( Restrictions.eq( "scheduledDate", date ) )
+                .add( Restrictions.eq( "enabled", true ) )
                 .addOrder( Order.asc( "scheduledTime" ) );
         return criteria.list();
+    }
+
+    public List<Appointment> findDayAppointmentsFetch( Date date ) {
+        /*Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( Appointment.class )
+                .add( Restrictions.eq( "scheduledDate", date ) )
+                .add( Restrictions.eq( "enabled", true ) )
+                .addOrder( Order.asc( "scheduledTime" ) );*/
+        Query query = getSessionFactory().getCurrentSession().createQuery(
+                "select ap from Appointment ap join fetch ap.type tp join fetch tp.documents " +
+                        "where ap.scheduledDate = ? " +
+                        "and ap.enabled = true " +
+                        "order by ap.scheduledTime asc"
+        );
+        query.setDate( 0, date )
+        .setResultTransformer( Criteria.DISTINCT_ROOT_ENTITY );
+        return query.list();
     }
 
     public List<DocumentName> findAllDocuments() {
@@ -124,5 +150,11 @@ public class AppointmentDao extends CommonDao {
 
     public DocumentName findDocument( long id ) {
         return (DocumentName) getSessionFactory().getCurrentSession().get( DocumentName.class, id );
+    }
+
+    public void initializeAssociations( Appointment appointment ) {
+        //getHibernateTemplate().initialize( appointment.getCampaign() );
+        //getHibernateTemplate().initialize( appointment.getType() );
+        getHibernateTemplate().initialize( appointment.getType().getDocuments() );
     }
 }

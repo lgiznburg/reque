@@ -31,7 +31,8 @@ public class SendEmailRemind {
         Calendar calendar = Calendar.getInstance();
         calendar.add( Calendar.DAY_OF_YEAR, 1 );
 
-        for ( Appointment appointment : appointmentDao.findDayAppointments( calendar.getTime() ) ) {
+        for ( Appointment appointment : appointmentDao.findDayAppointmentsFetch( calendar.getTime() ) ) {
+            //appointmentDao.initializeAssociations( appointment );
             SimpleDateFormat format = new SimpleDateFormat( "EEEE, dd MMMM в HH:mm", new Locale( "ru" ) );
             Map<String,Object> emailContext = new HashMap<>();
             emailContext.put( "fullDate", RuDateHelper.genetiveDay( format.format( appointment.getScheduledDate() ) ) );

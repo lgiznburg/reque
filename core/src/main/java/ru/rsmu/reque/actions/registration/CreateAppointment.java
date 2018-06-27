@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.rsmu.reque.actions.BaseController;
@@ -17,10 +18,12 @@ import ru.rsmu.reque.model.registration.ReceptionCampaign;
 import ru.rsmu.reque.model.system.ApplianceType;
 import ru.rsmu.reque.model.system.StoredPropertyName;
 import ru.rsmu.reque.model.system.User;
+import ru.rsmu.reque.service.AppointmentHelper;
 import ru.rsmu.reque.service.EmailService;
 import ru.rsmu.reque.service.EmailType;
 import ru.rsmu.reque.service.StoredPropertyService;
 import ru.rsmu.reque.utils.RuDateHelper;
+import ru.rsmu.reque.validators.AppointmentValidator;
 
 import javax.validation.Valid;
 import java.sql.Time;
@@ -46,6 +49,12 @@ public class CreateAppointment extends BaseController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private AppointmentValidator appointmentValidator;
+
+    @Autowired
+    private AppointmentHelper appointmentHelper;
+
     public CreateAppointment() {
         setTitle( "Определить дату визита" );
         setContent( "/WEB-INF/pages/blocks/CreateAppointment.jsp" );
@@ -61,62 +70,7 @@ public class CreateAppointment extends BaseController {
         if ( appointment == null || appointment.getCampaign() == null ) {
             return Collections.emptyList();
         }
-
-        Date startDate = appointment.getCampaign().getStartDate();
-        Date endDate = appointment.getCampaign().getEndDate();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set( Calendar.HOUR_OF_DAY, 0 );
-        calendar.set( Calendar.MINUTE, 0 );
-        calendar.set( Calendar.SECOND, 0 );
-        calendar.set( Calendar.MILLISECOND, 0 );
-
-        Date startTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_START_TIME );
-        Date endTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_END_TIME );
-        Date saturdayEndTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_SATURDAY_END_TIME );
-        long granularity = propertyService.getPropertyAsLong( StoredPropertyName.SCHEDULE_SERVICE_INTERVAL );
-        int amount = propertyService.getPropertyAsInt( StoredPropertyName.SCHEDULE_SERVICE_AMOUNT );
-        long dayAmount = (endTime.getTime() - startTime.getTime()) / (60000 * granularity) * amount;
-        long saturdayAmount = (saturdayEndTime.getTime() - startTime.getTime()) / (60000 * granularity) * amount;
-
-        Map<Date,Long> countByDates = appointmentDao.findDates( startDate, endDate );
-
-        if ( startDate.after( calendar.getTime() ) ) {
-            calendar.setTime( startDate );
-        }
-        List<Map<String,Object>> dates = new ArrayList<>();
-        while ( !calendar.getTime().after( endDate ) ) {
-            if ( calendar.get( Calendar.DAY_OF_WEEK ) == Calendar.SUNDAY ) {
-                Map<String,Object> map = new HashMap<>();
-                map.put( "date", calendar.getTime() );
-                map.put( "message", "Weekend" );
-                dates.add( map );
-            }
-            else if ( calendar.get( Calendar.DAY_OF_WEEK ) == Calendar.SATURDAY ) {
-                if ( propertyService.getPropertyAsInt( StoredPropertyName.SCHEDULE_WORKING_ON_SATURDAY ) > 0 ) {
-                    if ( countByDates.get( calendar.getTime() ) != null && countByDates.get( calendar.getTime() ) >= saturdayAmount ) {
-                        Map<String,Object> map = new HashMap<>();
-                        map.put( "date", calendar.getTime() );
-                        map.put( "message", "Not available" );
-                        dates.add( map );
-                    }
-                }
-                else {
-                    Map<String,Object> map = new HashMap<>();
-                    map.put( "date", calendar.getTime() );
-                    map.put( "message", "Weekend" );
-                    dates.add( map );
-                }
-            }
-            else if ( countByDates.get( calendar.getTime() ) != null && countByDates.get( calendar.getTime() ) >= dayAmount ) {
-                Map<String,Object> map = new HashMap<>();
-                map.put( "date", calendar.getTime() );
-                map.put( "message", "Not available" );
-                dates.add( map );
-            }
-            calendar.add( Calendar.DAY_OF_YEAR, 1 );
-        }
-        return dates;
+        return appointmentHelper.getAvailableDates( appointment );
     }
 
     @ModelAttribute("startDate")
@@ -204,6 +158,9 @@ public class CreateAppointment extends BaseController {
         binder.registerCustomEditor( Time.class, new DateTimeEditor( true ) );
         binder.registerCustomEditor( ApplianceType.class, new ApplianceTypeEditor( appointmentDao ) );
         binder.registerCustomEditor( ReceptionCampaign.class, new ReceptionCampaignEditor( campaignDao ) );
+        if ( binder.getTarget() instanceof Appointment ) {
+            binder.setValidator( appointmentValidator );
+        }
     }
 
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.HEAD})
@@ -219,10 +176,16 @@ public class CreateAppointment extends BaseController {
     public String saveAppointment( ModelMap model,
                                    @ModelAttribute("appointmentToCreate") @Valid Appointment appointment,
                                    BindingResult errors ) {
+        User user = getUser();
+        if ( appointment.getId() == 0 ) {
+            Appointment active = appointmentDao.findAppointment( user, new Date() );
+            if ( active != null ) {
+                errors.reject( "appointment.exist" );
+            }
+        }
         if ( errors.hasErrors() ) {
             return buildModel( model );
         }
-        User user = getUser();
         appointment.setUser( user );
         appointmentDao.saveEntity( appointment );
 
@@ -248,7 +211,9 @@ public class CreateAppointment extends BaseController {
     public String deleteAppointment( ModelMap model,
                                      @ModelAttribute("appointmentToCreate") Appointment appointment ) {
 
-        appointmentDao.deleteEntity( appointment );
+        //appointmentDao.deleteEntity( appointment );
+        appointment.setEnabled( false );
+        appointmentDao.saveEntity( appointment );
         return "redirect:/home.htm";
     }
 }

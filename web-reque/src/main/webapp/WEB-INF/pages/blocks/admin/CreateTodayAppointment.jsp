@@ -29,7 +29,7 @@
 
   function showTime( date ) {
     $("#timeSection").show();
-    $.ajax( '<c:url value="/ajax/GetAppointmentTimes.htm"/>',
+    $.ajax( '<c:url value="/ajax/${appointmentToCreate.campaign.id}/GetTodayAppointmentTimes.htm"/>',
         {
           data : {
             date : date,

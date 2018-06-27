@@ -48,6 +48,13 @@ public class ReceptionCampaign implements Serializable {
     @Column
     private boolean active = true;
 
+    @Column
+    private int priority = 0;
+
+    @Column(name = "concurrent_amount")
+    private int concurrentAmount = 0;
+
+
     public ReceptionCampaign() {
         availableTypes = new ArrayList<>();
     }
@@ -98,5 +105,21 @@ public class ReceptionCampaign implements Serializable {
 
     public void setActive( boolean active ) {
         this.active = active;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority( int priority ) {
+        this.priority = priority;
+    }
+
+    public int getConcurrentAmount() {
+        return concurrentAmount;
+    }
+
+    public void setConcurrentAmount( int concurrentAmount ) {
+        this.concurrentAmount = concurrentAmount;
     }
 }
