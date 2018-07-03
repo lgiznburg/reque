@@ -19,29 +19,71 @@
 записи.</p>
 
 <c:if test="${empty appointment}">
-  <p>Для ускорения подачи Вашего заявления рекомендуем предварительно заполнить <a class="btn btn-outline-success" href="https://reg1.rsmu.ru" target="_blank">электронную форму</a> </p>
-  <p>Обратите внимание, эта форма требует отдельной регистрации. После заполнения формы электронного заявления нужно
-    запомнить номер заявления и использовать этот номер при назначении даты и времени посещения приемной комиссии.</p>
+  <div class="row">
+    <div class="col p-2">
+      Для ускорения подачи Вашего заявления нужно предварительно заполнить электронную форму
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-auto justify-content-center p-2">
+      <a class="btn btn-outline-success" href="https://reg1.rsmu.ru" target="_blank">для поступающих на 1-й курс</a><br/>
+    </div>
+    <div class="col-auto justify-content-center p-2">
+      <a class="btn btn-outline-success" href="https://regkvk.rsmu.ru" target="_blank">для поступающих в ординатуру</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col p-2">
+      Обратите внимание, эта форма требует отдельной регистрации. После заполнения формы электронного заявления нужно
+      запомнить номер заявления и использовать этот номер при назначении даты и времени посещения приемной комиссии.
+    </div>
+  </div>
 </c:if>
 
   <sec:authorize access="isAnonymous()">
-   <p>Для записи в очередь для подачи заявления необходимо сначала <a class="btn btn-primary" href="<c:url value="Registration.htm"/> ">зарегистрироваться</a>
-      После этого Вы сможете выбрать день и время посещения из доступных на текущий момент. Позже Вы сможете перенести Вашу записть на другое время. </p>
+    <div class="row">
+      <div class="col p-2">
+        Для записи в очередь для подачи заявления необходимо
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-auto p-2">
+        <a class="btn btn-primary" href="<c:url value="Registration.htm"/> ">зарегистрироваться</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col p-2">
+        После этого Вы сможете выбрать день и время посещения из доступных на текущий момент.
+        Позже Вы сможете перенести Вашу записть на другое время.
+      </div>
+    </div>
   </sec:authorize>
   <sec:authorize access="hasAnyRole('ROLE_CLIENT','ROLE_ADMIN')">
     <c:choose>
       <c:when test="${empty appointment}">
-        <p><a class="btn btn-primary"  href="<c:url value="SelectCampaign.htm"/> ">Назначить дату и время</a> для подачи заявления. </p>
+        <div class="row justify-content-center">
+          <div class="col-auto p-2">
+            <a class="btn btn-primary"  href="<c:url value="SelectCampaign.htm"/> ">Назначить дату и время</a>
+          </div>
+        </div>
       </c:when>
       <c:otherwise>
-        <p>Мы Вас ожидаем в<c:if test="${fn:contains(fullDate, 'вторник')}">о</c:if>  <strong>${fullDate}</strong> <%-- <fmt:formatDate value="${appointment.scheduledDate}" pattern="EEEE, dd MMMM"/>--%>
-          в <strong><fmt:formatDate value="${appointment.scheduledTime}" pattern="HH:mm"/></strong>. </p>
-        <p>Вам необходимо предоставить следующие документы:
-        <ul>
-          <c:forEach items="${appointment.type.documents}" var="document"><li>${document.name}</li></c:forEach>
-        </ul>
-        </p>
-        <p>Вы можете <a class="btn btn-primary" href="<c:url value="/CreateAppointment.htm"><c:param name="id" value="${appointment.id}"/></c:url>">изменить</a> Вашу запись. </p>
+        <div class="row">
+          <div class="col p-2">
+            <p>Мы Вас ожидаем в<c:if test="${fn:contains(fullDate, 'вторник')}">о</c:if>  <strong>${fullDate}</strong> <%-- <fmt:formatDate value="${appointment.scheduledDate}" pattern="EEEE, dd MMMM"/>--%>
+              в <strong><fmt:formatDate value="${appointment.scheduledTime}" pattern="HH:mm"/></strong>. </p>
+            <p>Вам необходимо предоставить следующие документы:
+            <ul>
+              <c:forEach items="${appointment.type.documents}" var="document"><li>${document.name}</li></c:forEach>
+            </ul>
+            </p>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-auto p-2">
+            <a class="btn btn-primary" href="<c:url value="/CreateAppointment.htm"><c:param name="id" value="${appointment.id}"/></c:url>">изменить Вашу запись</a>
+          </div>
+        </div>
       </c:otherwise>
     </c:choose>
   </sec:authorize>

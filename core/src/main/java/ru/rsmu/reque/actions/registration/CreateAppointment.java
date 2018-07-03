@@ -183,6 +183,21 @@ public class CreateAppointment extends BaseController {
                 errors.reject( "appointment.exist" );
             }
         }
+        if ( !errors.hasErrors() ) {
+            // restrict by available slots
+            Map<Date, Long> hours = appointmentDao.findHours( appointment.getScheduledDate(), appointment.getCampaign().getPriority() );
+            ReceptionCampaign concurrentCampaign = campaignDao.findConcurrentCampaign( appointment.getCampaign(), new Date() );
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime( appointment.getScheduledDate() );
+            int amount = propertyService.getPropertyAsInt( StoredPropertyName.SCHEDULE_SERVICE_AMOUNT );
+            if ( appointment.getCampaign().getPriority() > 0 && concurrentCampaign != null
+                    && !calendar.getTime().after( concurrentCampaign.getEndDate() ) ) {
+                amount = appointment.getCampaign().getConcurrentAmount();
+            }
+            if ( hours.get( appointment.getScheduledTime() ) != null && hours.get( appointment.getScheduledTime() ) >= amount ) {
+                errors.rejectValue( "scheduledTime", "appointment.time_over" );
+            }
+        }
         if ( errors.hasErrors() ) {
             return buildModel( model );
         }

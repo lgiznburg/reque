@@ -42,9 +42,11 @@
       orientation: 'bl'
     });
 
-    <c:if test="${appointment.id ne 0}">
-    showTime( '<fmt:formatDate value="${appointment.scheduledDate}" pattern="dd.MM.yyyy"/>' );
+    <c:if test="${appointmentToCreate.id ne 0 or not empty appointmentToCreate.scheduledDate}">
+    showTime( '<fmt:formatDate value="${appointmentToCreate.scheduledDate}" pattern="dd.MM.yyyy"/>' );
+    </c:if>
 
+    <c:if test="${appointmentToCreate.id ne 0}">
     $("#sureDialog").dialog({
       autoOpen : false,
       modal: true,
@@ -117,7 +119,8 @@
   </div>
   <div class="row">
     <div class="col-sm-5 offset-2 small text-info">
-      <p>Для ускорения подачи Вашего заявления рекомендуем заполнить <a href="https://reg1.rsmu.ru" target="_blank">электронную форму</a></p>
+      <p>Для ускорения подачи Вашего заявления рекомендуем заполнить электронную форму <a href="https://reg1.rsmu.ru" target="_blank">для поступающих на 1-ый курс</a>
+        или <a href="https://regkvk.rsmu.ru" target="_blank">для поступающих в ординатуру</a>.</p>
       <p>Код регистрации этой электронной формы необходимо указать в предыдущем поле.</p>
       <p>Если Вы по каким-то причинам не желаете заполнять онлайн форму, введите последние 4 цифры номера Вашего паспорта.</p>
     </div>

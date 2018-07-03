@@ -48,10 +48,10 @@ public class User implements UserDetails, Serializable {
     private boolean enabled = true;
 
     @Column(name = "created_time")
-    private Date createdTime;
+    private Date createdTime = new Date();
 
     @Column(name = "last_updated")
-    private Date lastUpdated;
+    private Date lastUpdated = new Date();
 
     @Column(name = "first_name")
     @NotBlank

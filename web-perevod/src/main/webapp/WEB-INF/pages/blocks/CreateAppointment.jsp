@@ -6,6 +6,11 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <link rel="stylesheet" href="<c:url value="/resources/css/jquery.timepicker.css"/> ">
+<style>
+  .no-close .ui-dialog-titlebar-close {
+    display: none;
+  }
+</style>
 
 <script src="<c:url value="/resources/js/jquery.timepicker.min.js"/> "></script>
 
@@ -36,8 +41,40 @@
       orientation: 'bl'
     });
 
-    <c:if test="${appointment.id ne 0}">
-    showTime( '<fmt:formatDate value="${appointment.scheduledDate}" pattern="dd.MM.yyyy"/>' );
+    <c:if test="${appointmentToCreate.id ne 0 or not empty appointmentToCreate.scheduledDate}">
+    showTime( '<fmt:formatDate value="${appointmentToCreate.scheduledDate}" pattern="dd.MM.yyyy"/>' );
+    </c:if>
+
+    <c:if test="${appointmentToCreate.id ne 0}">
+    $("#sureDialog").dialog({
+      autoOpen : false,
+      modal: true,
+      dialogClass: "no-close border border-warning",
+      buttons : [
+        {
+          text: "Да",
+          click: function() {
+            $('<input>').attr({
+              type: 'hidden',
+              id: 'delete',
+              name: 'delete'
+            }).appendTo('#appointmentToCreate');
+            $("#appointmentToCreate").submit();
+            $( this ).dialog( "close" );
+          }
+        },
+        {
+          text: "Нет",
+          click: function() {
+            $( this ).dialog( "close" );
+          }
+        }
+      ]
+
+    });
+    $("#deleteButton").click( function() { $("#sureDialog").dialog("open"); return false; } );
+    $("div.ui-dialog-buttonset button").addClass("btn btn-outline-warning");
+    $("div.ui-dialog-titlebar").addClass("bg-white");
     </c:if>
 
   });
@@ -105,7 +142,8 @@
       <a class="btn btn-outline-success" href="<c:url value="/home.htm"/>">Назад</a>
       <button type="submit" class="btn btn-primary">Сохранить</button>
       <c:if test="${appointmentToCreate.id > 0}">
-        <button type="submit" name="delete" class="btn btn-outline-warning">Удалить</button>
+        <button type="button" id="deleteButton" class="btn btn-outline-warning">Удалить</button>
+        <div id="sureDialog">Ваша запись будет удалена. Вы уверены?</div>
       </c:if>
     </div>
   </div>
