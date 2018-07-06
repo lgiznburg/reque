@@ -21,9 +21,11 @@ import java.util.*;
 @Repository
 public class AppointmentDao extends CommonDao {
 
-    public Map<Date, Long> findDates( Date startDate, Date endDate ) {
+    public Map<Date, Long> findDates( Date startDate, Date endDate, int priority ) {
         Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( Appointment.class )
                 .add( Restrictions.between( "scheduledDate", startDate, endDate ) )
+                .createAlias( "campaign", "campaign" )
+                .add( Restrictions.eq( "campaign.priority", priority ) )
                 .add( Restrictions.eq( "enabled", true ) )
                 .setProjection(
                         Projections.projectionList()
@@ -132,7 +134,7 @@ public class AppointmentDao extends CommonDao {
                 .add( Restrictions.eq( "enabled", true ) )
                 .addOrder( Order.asc( "scheduledTime" ) );*/
         Query query = getSessionFactory().getCurrentSession().createQuery(
-                "select ap from Appointment ap join fetch ap.type tp join fetch tp.documents " +
+                "select ap from Appointment ap join fetch ap.type tp join fetch tp.documents join fetch ap.user " +
                         "where ap.scheduledDate = ? " +
                         "and ap.enabled = true " +
                         "order by ap.scheduledTime asc"

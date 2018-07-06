@@ -50,7 +50,7 @@ public class AppointmentHelper {
         long concurrentDayAmount = (endTime.getTime() - startTime.getTime()) / (60000 * granularity) * appointment.getCampaign().getConcurrentAmount();
         long concurrentSaturdayAmount = (saturdayEndTime.getTime() - startTime.getTime()) / (60000 * granularity) * appointment.getCampaign().getConcurrentAmount();
 
-        Map<Date,Long> countByDates = appointmentDao.findDates( startDate, endDate );
+        Map<Date,Long> countByDates = appointmentDao.findDates( startDate, endDate, appointment.getCampaign().getPriority() );
 
         if ( startDate.after( calendar.getTime() ) ) {
             calendar.setTime( startDate );
@@ -102,7 +102,8 @@ public class AppointmentHelper {
         if ( concurrent!= null && campaign.getPriority() > 0 ) {
             amount = campaign.getConcurrentAmount();
         }
-        return calculateTimes( date, amount + 2, campaign.getPriority() );
+        int addAmount = propertyService.getPropertyAsInt( StoredPropertyName.SCHEDULE_ADMIN_ADD_AMOUNT );
+        return calculateTimes( date, amount + addAmount, campaign.getPriority() );
     }
 
     private List<List<String>> calculateTimes( Date date, long amount, int priority ) {

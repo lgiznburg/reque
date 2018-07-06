@@ -83,15 +83,28 @@
         <property name="cronExpression" value="0 0 10 * * ?" />
     </bean>
 
+    <bean id="smsReminder" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="sendSmsRemind"/>
+        <property name="targetMethod" value="sendReminders"/>
+    </bean>
+
+    <bean id="sendSmsReminderTriger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="smsReminder"/>
+        <!-- run every day at 11am -->
+        <property name="cronExpression" value="0 0 11 * * ?" />
+    </bean>
+
     <bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="jobDetails">
             <list>
                 <ref bean="sendReminder"/>
+                <ref bean="smsReminder"/>
             </list>
         </property>
         <property name="triggers">
             <list>
                 <ref bean="sendReminderTriger"/>
+                <ref bean="sendSmsReminderTriger"/>
             </list>
         </property>
     </bean>

@@ -12,8 +12,15 @@ public enum StoredPropertyName {
     SCHEDULE_SATURDAY_END_TIME("Schedule", "6.End time on Saturday", "14:00", StoredPropertyType.TIME),
     SCHEDULE_SERVICE_INTERVAL("Schedule", "7.Service interval (min)", "15", StoredPropertyType.INTEGER, false),
     SCHEDULE_SERVICE_AMOUNT("Schedule", "8.How many customers could be served in the interval", "30", StoredPropertyType.INTEGER),
+    SCHEDULE_ADMIN_ADD_AMOUNT("Schedule", "9.Дополнительные места для записи на сегодня", "3", StoredPropertyType.INTEGER),
     EMAIL_FROM_ADDRESS("Email","Обратный адрес для email", "prk@rsmu.ru", StoredPropertyType.STRING),
-    EMAIL_FROM_SIGNATURE("Email","Название обратного адреса для email", "Приемная комиссия РНИМУ им.Пирогова", StoredPropertyType.STRING);
+    EMAIL_FROM_SIGNATURE("Email","Название обратного адреса для email", "Приемная комиссия РНИМУ им.Пирогова", StoredPropertyType.STRING),
+    MEGAPHONE_SERVICE_URL("Megaphone SMS", "1.Адрес URI для отправки SMS", "https://a2p-api.megalabs.ru", StoredPropertyType.STRING),
+    MEGAPHONE_SERVICE_METHOD("Megaphone SMS", "2.Метод для отправки SMS", "sms/v1/sms", StoredPropertyType.STRING),
+    MEGAPHONE_LOGIN("Megaphone SMS", "3.Логин", "MSK_prgvmn", StoredPropertyType.STRING),
+    MEGAPHONE_PASSWORD("Megaphone SMS", "4.Пароль", "S3U4DJ1d", StoredPropertyType.STRING),
+    MEGAPHONE_SMS_ENABLED("Megaphone SMS", "5.Включено", "1", StoredPropertyType.INTEGER)
+    ;
 
     private String groupName;
     private String name;
