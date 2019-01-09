@@ -21,6 +21,7 @@ import java.util.List;
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class User implements UserDetails, Serializable {
 
+    private static final long serialVersionUID = -1857401565764391841L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -63,6 +64,9 @@ public class User implements UserDetails, Serializable {
 
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @OneToOne(mappedBy = "user")
+    private AdditionalUserInfo additionalUserInfo;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -173,5 +177,13 @@ public class User implements UserDetails, Serializable {
 
     public void setPasswordConfirmation( String passwordConfirmation ) {
         this.passwordConfirmation = passwordConfirmation;
+    }
+
+    public AdditionalUserInfo getAdditionalUserInfo() {
+        return additionalUserInfo;
+    }
+
+    public void setAdditionalUserInfo( AdditionalUserInfo additionalUserInfo ) {
+        this.additionalUserInfo = additionalUserInfo;
     }
 }

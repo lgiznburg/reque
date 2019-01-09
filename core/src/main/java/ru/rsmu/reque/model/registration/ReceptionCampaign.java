@@ -19,6 +19,7 @@ import java.util.List;
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ReceptionCampaign implements Serializable {
 
+    private static final long serialVersionUID = -7572972721835650570L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

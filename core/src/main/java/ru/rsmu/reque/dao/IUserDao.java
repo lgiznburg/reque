@@ -1,9 +1,6 @@
 package ru.rsmu.reque.dao;
 
-import ru.rsmu.reque.model.system.RemindPasswordKey;
-import ru.rsmu.reque.model.system.User;
-import ru.rsmu.reque.model.system.UserRole;
-import ru.rsmu.reque.model.system.UserRoleName;
+import ru.rsmu.reque.model.system.*;
 
 /**
  * @author leonid.
@@ -16,4 +13,6 @@ public interface IUserDao {
     RemindPasswordKey findRemindPasswordKey( String uniqueKey );
 
     void savePasswordKey( RemindPasswordKey key );
+
+    void saveAdditionalInfo( AdditionalUserInfo additionalUserInfo );
 }

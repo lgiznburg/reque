@@ -90,7 +90,7 @@ public abstract class BaseRestfullApiConnector {
             if ( statusCode == HttpStatus.SC_OK ) {
                 result = parser.parse( new InputStreamReader( method.getResponseBodyAsStream(), "UTF-8" ) ).getAsJsonObject();
             } else {
-                getLogger().error( String.format( "Unable to get response from RESTfull API; HTTP status \"%d\";  Requested: \"%s\"", statusCode, method.getURI().toString() ) );
+                getLogger().error( String.format( "Unable to get response from RESTfull API; HTTP status \"%d\";", statusCode ) );
             }
         } catch (IOException e) {
             getLogger().error( "Connection error with RESTfull API", e );

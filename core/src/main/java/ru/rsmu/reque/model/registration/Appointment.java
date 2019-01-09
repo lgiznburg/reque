@@ -19,6 +19,7 @@ import java.util.Date;
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class Appointment implements Serializable {
 
+    private static final long serialVersionUID = -3739926539786508501L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

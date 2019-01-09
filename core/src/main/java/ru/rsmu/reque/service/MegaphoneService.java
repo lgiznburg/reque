@@ -79,7 +79,9 @@ public class MegaphoneService {
         }
         MegaphoneResponse response = gson.fromJson( jsonResponse.get( "result" ), MegaphoneResponse.class );
         if ( response.getStatus().getCode() != 0 ) {
-            log.warn( String.format( "SMS was not sent. Code: %d, %s", response.getStatus().getCode(), response.getStatus().getDescription() ) );
+            log.warn( String.format( "SMS was not sent. Code: %d, %s; Phone: %s", response.getStatus().getCode(), response.getStatus().getDescription(), appointment.getUser().getPhoneNumber() ) );
+        } else {
+            log.warn( String.format( "SMS was sent. Code: %d, %s; Phone: %s", response.getStatus().getCode(), response.getStatus().getDescription(), appointment.getUser().getPhoneNumber() )  );
         }
         return response.getMsgId();
     }

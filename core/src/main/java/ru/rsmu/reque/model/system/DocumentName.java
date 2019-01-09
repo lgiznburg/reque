@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Table(name = "document_names")
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class DocumentName implements Serializable/*, Comparable<DocumentName>*/{
+    private static final long serialVersionUID = -1820600073997977379L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

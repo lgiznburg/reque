@@ -12,6 +12,7 @@ import java.util.Date;
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class RemindPasswordKey implements Serializable {
 
+    private static final long serialVersionUID = -8822921029179294280L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

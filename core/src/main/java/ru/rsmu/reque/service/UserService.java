@@ -40,6 +40,9 @@ public class UserService {
         user.setEnabled( true );
         user.setLastUpdated( new Date() );
         userDao.saveUser( user );
+        if ( user.getAdditionalUserInfo() != null ) {
+            userDao.saveAdditionalInfo( user.getAdditionalUserInfo() );
+        }
     }
 
 

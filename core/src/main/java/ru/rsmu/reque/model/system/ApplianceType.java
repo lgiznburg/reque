@@ -14,6 +14,7 @@ import java.util.Set;
 @Table(name = "appliance_types")
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class ApplianceType implements Serializable {
+    private static final long serialVersionUID = 5512792591406435504L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

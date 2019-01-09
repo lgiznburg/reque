@@ -4,6 +4,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -16,6 +17,9 @@ import ru.rsmu.reque.model.system.User;
  */
 @Component
 public class UserValidator implements Validator {
+
+    @Value("${system.useAdditionalInfo:0}")
+    private int useAdditionalInfo;
 
     @Autowired
     private Validator validator;
@@ -33,6 +37,13 @@ public class UserValidator implements Validator {
         ValidationUtils.invokeValidator( validator, object, errors );
 
         User user = (User) object;
+
+        if ( useAdditionalInfo > 0 ) {
+            errors.pushNestedPath( "additionalUserInfo" );
+            ValidationUtils.invokeValidator( validator, user.getAdditionalUserInfo(), errors );
+            errors.popNestedPath();
+            ValidationUtils.rejectIfEmptyOrWhitespace( errors, "phoneNumber", "NotBlank" );
+        }
 
         if ( !errors.hasFieldErrors( "username" ) && user.getId() == 0 ) {
             User existed = userDao.findUser( user.getUsername() );

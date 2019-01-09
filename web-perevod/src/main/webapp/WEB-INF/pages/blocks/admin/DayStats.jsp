@@ -33,6 +33,13 @@
     </div>
   </form>
 
+  <div class="row">
+    <div class="col-sm-10">
+      <fmt:formatDate value="${testDate}" pattern="dd.MM.yyyy" var="strTestDate"/>
+      <a target="_blank" class="btn btn-outline-info" href="<c:url value="/admin/DayStats.htm"><c:param name="testDate" value="${strTestDate}"/><c:param name="print" value="1"/></c:url>">Печать списка</a>
+    </div>
+  </div>
+
   <table class="table" >
     <tr>
       <th>Дата</th>
@@ -58,7 +65,8 @@
       <th>Время</th>
       <th>Имя</th>
       <th>Тип</th>
-      <th>Онлайн номер</th>
+      <th>Документ</th>
+      <th>Телефон</th>
     </tr>
     <c:forEach items="${appointments}" var="appt" varStatus="indx">
       <tr>
@@ -67,6 +75,7 @@
         <td>${appt.user.lastName} ${appt.user.firstName}</td>
         <td>${appt.type.name}</td>
         <td>${appt.onlineNumber}</td>
+        <td>${appt.user.phoneNumber}</td>
       </tr>
     </c:forEach>
   </table>

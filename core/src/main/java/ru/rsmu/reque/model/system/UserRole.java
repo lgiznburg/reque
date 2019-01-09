@@ -14,6 +14,7 @@ import java.io.Serializable;
 @org.hibernate.annotations.Entity(dynamicUpdate = true, dynamicInsert = true)
 public class UserRole implements GrantedAuthority, Serializable {
 
+    private static final long serialVersionUID = 8334797143555477559L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

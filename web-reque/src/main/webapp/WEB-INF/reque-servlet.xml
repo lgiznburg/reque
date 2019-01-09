@@ -95,12 +95,12 @@
     </bean>
 
     <bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="jobDetails">
+        <!--<property name="jobDetails">
             <list>
                 <ref bean="sendReminder"/>
                 <ref bean="smsReminder"/>
             </list>
-        </property>
+        </property>-->
         <property name="triggers">
             <list>
                 <ref bean="sendReminderTriger"/>

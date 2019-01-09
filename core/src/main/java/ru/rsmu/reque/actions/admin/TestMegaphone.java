@@ -39,41 +39,48 @@ public class TestMegaphone extends BaseController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String sendSms( @RequestParam(value = "phoneNumber") String phoneNumber,
+    public String sendSms( @RequestParam(value = "phoneNumber") String numbersInput,
                            @RequestParam(value = "text") String text,
                            ModelMap modelMap ) {
+        String[] numbers = numbersInput.split( "[,;\n]" );
+        if ( numbers.length == 0 ) {
+            modelMap.addAttribute( "jsonResponse", "No numbers submitted" );
+            return buildModel( modelMap );
+        }
         PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-        if ( phoneNumber != null && !phoneNumber.isEmpty() ) {
-            try {
-                Phonenumber.PhoneNumber phone = phoneNumberUtil.parse( phoneNumber, "RU" );
-                if ( !phoneNumberUtil.isValidNumber( phone ) ) {
+        for( String phoneNumber : numbers ) {
+            if ( phoneNumber != null && !phoneNumber.isEmpty() ) {
+                try {
+                    Phonenumber.PhoneNumber phone = phoneNumberUtil.parse( phoneNumber, "RU" );
+                    if ( !phoneNumberUtil.isValidNumber( phone ) ) {
+                        modelMap.addAttribute( "phoneNumberMsg", "Wrong format" );
+                        return buildModel( modelMap );
+                    }
+                } catch (NumberParseException e) {
                     modelMap.addAttribute( "phoneNumberMsg", "Wrong format" );
                     return buildModel( modelMap );
                 }
-            } catch (NumberParseException e) {
-                modelMap.addAttribute( "phoneNumberMsg", "Wrong format" );
+            }
+
+            MegaphoneMessage message = new MegaphoneMessage();
+            message.setTo( Long.parseLong( phoneNumber.replaceAll( "\\D", "" ) ) );
+            message.setMessage( text );
+
+            Gson gson = new GsonBuilder()
+                    .setFieldNamingPolicy( FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES )
+                            //.setDateFormat( "MM/dd/yyyy" )
+                    .create();
+
+            String body = gson.toJson( message );
+            JsonObject jsonResponse = connector.sendSms( body );
+            if ( jsonResponse == null ) {
+                modelMap.addAttribute( "jsonResponse", "Ошибка соединения с сервером" );
                 return buildModel( modelMap );
             }
+            MegaphoneResponse response = gson.fromJson( jsonResponse.get( "result" ), MegaphoneResponse.class );
+            modelMap.addAttribute( "megaphoneResponse", response );
+            modelMap.addAttribute( "jsonResponse", jsonResponse.toString() );
         }
-
-        MegaphoneMessage message = new MegaphoneMessage();
-        message.setTo( Long.parseLong( phoneNumber.replaceAll( "\\D", "" ) ) );
-        message.setMessage( text );
-
-        Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy( FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES )
-                        //.setDateFormat( "MM/dd/yyyy" )
-                .create();
-
-        String body = gson.toJson( message );
-        JsonObject jsonResponse = connector.sendSms( body );
-        if ( jsonResponse == null ) {
-            modelMap.addAttribute( "jsonResponse", "Ошибка соединения с сервером" );
-            return buildModel( modelMap );
-        }
-        MegaphoneResponse response = gson.fromJson( jsonResponse.get( "result" ), MegaphoneResponse.class );
-        modelMap.addAttribute( "megaphoneResponse", response );
-        modelMap.addAttribute( "jsonResponse", jsonResponse.toString() );
         return buildModel( modelMap );
     }
 }

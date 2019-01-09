@@ -10,6 +10,7 @@ import ru.rsmu.reque.actions.BaseController;
 import ru.rsmu.reque.dao.ReceptionCampaignDao;
 import ru.rsmu.reque.model.registration.ReceptionCampaign;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -44,6 +45,10 @@ public class SelectCampaign extends BaseController {
     @RequestMapping(value = "/admin/SelectCampaign.htm", method = {RequestMethod.GET, RequestMethod.HEAD} )
     public String showPageServiceman( ModelMap model,
                             @ModelAttribute("campaigns") List<ReceptionCampaign> campaigns) {
+        Calendar date = Calendar.getInstance();
+        date.add( Calendar.DAY_OF_YEAR, -1 );  // it should find campaign on its last day
+        campaigns = campaignDao.findAvailableCampaigns( date.getTime() );
+        model.addAttribute( "campaigns", campaigns );
         if ( campaigns.size() == 1 ) {
             return String .format( "redirect:/admin/CreateTodayAppointment.htm?campaign=%d", campaigns.get( 0 ).getId() );
         }
