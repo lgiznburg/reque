@@ -108,7 +108,7 @@ public class AppointmentDao extends CommonDao {
     }
 
     public Appointment findAppointment( long id ) {
-        return getHibernateTemplate().load( Appointment.class, id );
+        return findEntity( Appointment.class, id );
     }
 
     public Appointment findAppointment( User user, Date date ) {

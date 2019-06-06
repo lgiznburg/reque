@@ -76,7 +76,7 @@
 
   <div class="form-group row">
     <div class="col-sm-7">
-      <a class="btn btn-outline-success" href="<c:url value="/admin/StoredProperties.htm"/>">Назад</a>
+      <a class="btn btn-outline-success" href="<c:url value="/admin/Campaigns.htm"/>">Назад</a>
       <button type="submit" class="btn btn-primary">Сохранить</button>
     </div>
   </div>

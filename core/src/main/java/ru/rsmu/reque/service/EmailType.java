@@ -8,7 +8,8 @@ public enum EmailType {
     REMINDER( "/emails/Reminder.vm","Подтверждение предварительной записи"),
     PASSWORD_REMINDER( "/emails/PasswordRemind.vm","Восстановление пароля"),
     REGISTRATION_BY_ADMIN("/emails/RegistrationByAdmin.vm","Подтверждение регистрации сотрудником приемной комиссии"),
-    SMS_REMINDER("/emails/SmsReminder.vm","SMS");
+    SMS_REMINDER("/emails/SmsReminder.vm","SMS"),
+    EDIT_BY_ADMIN_REMINDER( "/emails/AdminEditReminder.vm","Изменение предварительной записи");
 
     private String fileName;
     private String subject;

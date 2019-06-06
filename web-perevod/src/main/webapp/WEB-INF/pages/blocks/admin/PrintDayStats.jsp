@@ -14,8 +14,9 @@
   <tr>
     <th>#</th>
     <th>Время</th>
-    <th>Имя</th>
+    <th>ФИО</th>
     <th>Тип</th>
+    <th>Окончание сессии</th>
     <th>Документ</th>
     <th>Телефон</th>
   </tr>
@@ -23,8 +24,11 @@
     <tr>
       <td>${indx.index+1}</td>
       <td><fmt:formatDate value="${appt.scheduledTime}" pattern="HH:mm"/></td>
-      <td>${appt.user.lastName} ${appt.user.firstName}</td>
+      <td>${appt.user.lastName} ${appt.user.firstName} ${appt.user.additionalUserInfo.middleName}
+        <c:if test="${not empty appt.user.additionalUserInfo.representativeFullName}">(представитель: ${appt.user.additionalUserInfo.representativeFullName} )</c:if>
+      </td>
       <td>${appt.type.name}</td>
+      <td><fmt:formatDate value="${appt.user.additionalUserInfo.sessionEndDate}" pattern="dd.MM.yyyy"/></td>
       <td>${appt.onlineNumber}</td>
       <td>${appt.user.phoneNumber}</td>
     </tr>

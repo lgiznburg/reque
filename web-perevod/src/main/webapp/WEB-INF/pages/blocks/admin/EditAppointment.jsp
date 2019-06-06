@@ -17,7 +17,7 @@
 <script>
   var dateMap = new Map();
   <c:forEach items="${availableDates}" var="dateMap">
-    dateMap.set( new Date( <fmt:formatDate value="${dateMap['date']}" pattern="yyyy, M-1, d"/>).toDateString(), '${dateMap['message']}' );
+  dateMap.set( new Date( <fmt:formatDate value="${dateMap['date']}" pattern="yyyy, M-1, d"/>).toDateString(), '${dateMap['message']}' );
   </c:forEach>
 
   $( function() {
@@ -25,7 +25,6 @@
       minDate: new Date( <fmt:formatDate value="${startDate}" pattern="yyyy, M-1, d"/> ),
       maxDate: new Date( <fmt:formatDate value="${endDate}" pattern="yyyy, M-1, d"/> ),
       beforeShowDay: onShowDate,
-      onSelect: showTime,
       showOptions: { direction: "down" },
       showAnim: "slideDown"
     } );
@@ -40,10 +39,6 @@
       disableTextInput: true,
       orientation: 'bl'
     });
-
-    <c:if test="${appointmentToCreate.id ne 0 or not empty appointmentToCreate.scheduledDate}">
-    showTime( '<fmt:formatDate value="${appointmentToCreate.scheduledDate}" pattern="dd.MM.yyyy"/>' );
-    </c:if>
 
     <c:if test="${appointmentToCreate.id ne 0}">
     $("#sureDialog").dialog({
@@ -79,20 +74,6 @@
 
   });
 
-  function showTime( date ) {
-    $("#timeSection").show();
-    $.ajax( '<c:url value="/ajax/${appointmentToCreate.campaign.id}/GetAppointmentTimes.htm"/>',
-        {
-          data : {
-            date : date,
-            dataType: "text"
-          }
-        }
-    )
-        .done( function setDisableTimes( data ) {
-          $("#scheduledTime").timepicker( "option", "disableTimeRanges", data );
-        } );
-  }
 
   function onShowDate( date ) {
     if ( typeof dateMap.get( date.toDateString() ) != "undefined" ) {
@@ -104,26 +85,36 @@
 
 </script>
 
-<h2>Предварительная запись</h2>
+<h2>Изменить предварительную запись</h2>
 
-<form:form commandName="appointmentToCreate" name="appointment" method="post" action="CreateAppointment.htm">
+<form:form commandName="appointmentToCreate" name="appointment" method="post" action="EditAppointment.htm">
   <form:hidden path="id"/>
-  <form:hidden path="campaign"/>
-  <input type="hidden" name="onlineNumber" value="${appointmentToCreate.user.additionalUserInfo.documentNumber}"/>
-  <%--<div class="form-group row">
-    <form:label path="onlineNumber" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Последние четыре цифры номера паспорта <sup>*</sup></form:label>
+
+  <div class="row">
+    <div class="col-sm-2">ФИО</div>
     <div class="col-sm-5">
-      <form:input path="onlineNumber"  cssClass="form-control"/>
-      <form:errors path="onlineNumber" element="span" cssClass="text-danger" />
-    </div>
-  </div>--%>
-  <div class="form-group row">
-    <form:label path="type" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Тип заявления <sup>*</sup></form:label>
-    <div class="col-sm-5">
-      <form:select path="type" items="${applianceTypes}" itemLabel="description" itemValue="id"   cssClass="form-control"/>
-      <form:errors path="type" element="span" cssClass="text-danger"/>
+      <p>${appointmentToCreate.user.lastName} ${appointmentToCreate.user.firstName} ${appointmentToCreate.user.additionalUserInfo.middleName}</p>
     </div>
   </div>
+  <div class="row">
+    <div class="col-sm-2">Гражданство</div>
+    <div class="col-sm-5">
+      <p>${appointmentToCreate.user.additionalUserInfo.citizenship}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-2">Тип заявления</div>
+    <div class="col-sm-5">
+      <p>${appointmentToCreate.type.description}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-2">Окончание сессии</div>
+    <div class="col-sm-5">
+      <p><fmt:formatDate value="${appointmentToCreate.user.additionalUserInfo.sessionEndDate}" pattern="dd MMM yyyy"/></p>
+    </div>
+  </div>
+
   <div class="form-group row">
     <form:label path="scheduledDate" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Дата <sup>*</sup></form:label>
     <div class="col-sm-5">
@@ -140,11 +131,11 @@
   </div>
   <div class="form-group row">
     <div class="col-sm-7">
-      <a class="btn btn-outline-success" href="<c:url value="/home.htm"/>">Назад</a>
+      <a class="btn btn-outline-success" href="<c:url value="/admin/DayStats.htm"><c:param name="testDate" value="${appointmentToCreate.scheduledDate}"/></c:url> ">Назад</a>
       <button type="submit" class="btn btn-primary">Сохранить</button>
       <c:if test="${appointmentToCreate.id > 0}">
         <button type="button" id="deleteButton" class="btn btn-outline-warning">Удалить</button>
-        <div id="sureDialog">Ваша запись будет удалена. Вы уверены?</div>
+        <div id="sureDialog">Запись будет удалена. Вы уверены?</div>
       </c:if>
     </div>
   </div>

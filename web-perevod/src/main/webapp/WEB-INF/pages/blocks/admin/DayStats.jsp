@@ -63,17 +63,21 @@
     <tr>
       <th>#</th>
       <th>Время</th>
-      <th>Имя</th>
+      <th>ФИО</th>
       <th>Тип</th>
+      <th>Окончание сессии</th>
       <th>Документ</th>
       <th>Телефон</th>
     </tr>
     <c:forEach items="${appointments}" var="appt" varStatus="indx">
       <tr>
         <td>${indx.index+1}</td>
-        <td><fmt:formatDate value="${appt.scheduledTime}" pattern="HH:mm"/></td>
-        <td>${appt.user.lastName} ${appt.user.firstName}</td>
+        <td><a href="<c:url value="/admin/EditAppointment.htm"><c:param name="id" value="${appt.id}"/></c:url>"> <fmt:formatDate value="${appt.scheduledTime}" pattern="HH:mm"/></a></td>
+        <td><a href="<c:url value="/admin/EditAppointment.htm"><c:param name="id" value="${appt.id}"/></c:url>">${appt.user.lastName} ${appt.user.firstName} ${appt.user.additionalUserInfo.middleName}</a>
+          <c:if test="${not empty appt.user.additionalUserInfo.representativeFullName}"><br/>(представитель: ${appt.user.additionalUserInfo.representativeFullName} )</c:if>
+        </td>
         <td>${appt.type.name}</td>
+        <td><fmt:formatDate value="${appt.user.additionalUserInfo.sessionEndDate}" pattern="dd.MM.yyyy"/></td>
         <td>${appt.onlineNumber}</td>
         <td>${appt.user.phoneNumber}</td>
       </tr>
