@@ -12,3 +12,7 @@
         &nbsp;&nbsp;&nbsp;<fmt:formatDate value="${campaign.startDate}" dateStyle="medium"/> - <fmt:formatDate value="${campaign.endDate}" dateStyle="medium"/></a></li>
     </c:forEach>
   </ul>
+<c:if test="${empty campaigns}">
+  <p>В данный момент предварительная запись не проводится. Пожалуйста,
+    следите за объявлениями на <a href="http://rsmu.ru/abitur1.html">нашем сайте</a>.</p>
+</c:if>

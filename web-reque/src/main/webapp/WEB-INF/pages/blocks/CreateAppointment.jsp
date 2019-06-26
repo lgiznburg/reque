@@ -111,7 +111,7 @@
   <form:hidden path="id"/>
   <form:hidden path="campaign"/>
   <div class="form-group row">
-    <form:label path="onlineNumber" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Код онлайн регистрации <sup>*</sup></form:label>
+    <form:label path="onlineNumber" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Номер онлайн-заявления или Последние 4 цифры номера паспорта<sup>*</sup></form:label>
     <div class="col-sm-5">
       <form:input path="onlineNumber"  cssClass="form-control"/>
       <form:errors path="onlineNumber" element="span" cssClass="text-danger" />
@@ -119,9 +119,10 @@
   </div>
   <div class="row">
     <div class="col-sm-5 offset-2 small text-info">
-      <p>Для ускорения подачи Вашего заявления рекомендуем заполнить электронную форму <a href="https://reg1.rsmu.ru" target="_blank">для поступающих на 1-ый курс</a>
+      <p>Для ускорения подачи Вашего заявления рекомендуем заполнить электронную форму <a href="https://reg1.rsmu.ru" target="_blank">для поступающих на 1-ый курс</a>,
+        <a href="https://regmst.rsmu.ru" target="_blank">для поступающих в магистратуру</a>
         или <a href="https://regkvk.rsmu.ru" target="_blank">для поступающих в ординатуру</a>.</p>
-      <p>Код регистрации этой электронной формы необходимо указать в предыдущем поле.</p>
+      <p>Номер этого онлайн-заявления необходимо указать в предыдущем поле.</p>
       <p>Если Вы по каким-то причинам не желаете заполнять онлайн форму, введите последние 4 цифры номера Вашего паспорта.</p>
     </div>
   </div>
