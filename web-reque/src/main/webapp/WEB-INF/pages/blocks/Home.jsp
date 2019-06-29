@@ -21,7 +21,7 @@
 <c:if test="${empty appointment}">
   <div class="row">
     <div class="col p-2">
-      Для ускорения подачи Вашего заявления нужно предварительно заполнить электронную форму
+      <span class="text-info">Рекомендация:</span> для ускорения подачи Вашего заявления предварительно заполните электронную форму
     </div>
   </div>
   <div class="row justify-content-center">
@@ -29,13 +29,16 @@
       <a class="btn btn-outline-success" href="https://reg1.rsmu.ru" target="_blank">для поступающих на 1-й курс</a><br/>
     </div>
     <div class="col-auto justify-content-center p-2">
+      <a class="btn btn-outline-success" href="https://regmst.rsmu.ru" target="_blank">для поступающих в магистратуру</a><br/>
+    </div>
+    <div class="col-auto justify-content-center p-2">
       <a class="btn btn-outline-success" href="https://regkvk.rsmu.ru" target="_blank">для поступающих в ординатуру</a>
     </div>
   </div>
   <div class="row">
     <div class="col p-2">
-      Обратите внимание, эта форма требует отдельной регистрации. После заполнения формы электронного заявления нужно
-      запомнить номер заявления и использовать этот номер при назначении даты и времени посещения приемной комиссии.
+      <span class="text-info">Обратите внимание</span>, эта форма требует отдельной регистрации. После заполнения формы электронного заявления
+      запомните <em>номер заявления</em> и используйте этот номер при назначении даты и времени посещения приемной комиссии.
     </div>
   </div>
 </c:if>
@@ -61,6 +64,8 @@
   <sec:authorize access="hasAnyRole('ROLE_CLIENT','ROLE_ADMIN')">
     <c:choose>
       <c:when test="${empty appointment}">
+        <p><span  class="text-info"><strong>Внимание! Запись в очередь еще не закончена!</strong></span> Не забудьте </p>
+
         <div class="row justify-content-center">
           <div class="col-auto p-2">
             <a class="btn btn-primary"  href="<c:url value="SelectCampaign.htm"/> ">Назначить дату и время</a>

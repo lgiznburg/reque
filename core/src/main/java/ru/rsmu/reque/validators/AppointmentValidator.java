@@ -67,7 +67,16 @@ public class AppointmentValidator implements Validator {
             }
             long endTimeNum = getTimeNum( calendar );
             if ( startTimeNum > scheduledTimeNum || endTimeNum <= scheduledTimeNum ) {
-                errors.reject( "scheduledTime", "appointment.wrong_time" );
+                errors.rejectValue( "scheduledTime", "appointment.wrong_time" );
+            }
+        }
+        if ( !errors.hasFieldErrors("onlineNumber") ) {
+            String online = appointment.getOnlineNumber();
+            if ( online.length() > 13 ) {
+                errors.rejectValue( "onlineNumber", "appointment.number_too_long" );
+            }
+            if ( !online.matches( "[ \\w]*" ) ) {
+                errors.rejectValue( "onlineNumber", "appointment.use_numbers_only" );
             }
         }
 

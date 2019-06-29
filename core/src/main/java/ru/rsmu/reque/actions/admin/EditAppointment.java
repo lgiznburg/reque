@@ -18,6 +18,7 @@ import ru.rsmu.reque.model.registration.Appointment;
 import ru.rsmu.reque.model.registration.ReceptionCampaign;
 import ru.rsmu.reque.model.system.ApplianceType;
 import ru.rsmu.reque.model.system.StoredPropertyName;
+import ru.rsmu.reque.model.system.User;
 import ru.rsmu.reque.service.EmailService;
 import ru.rsmu.reque.service.EmailType;
 import ru.rsmu.reque.service.StoredPropertyService;
@@ -165,6 +166,18 @@ public class EditAppointment extends BaseController {
         return lastTime.getTime();
     }
 
+    @ModelAttribute("applianceTypes")
+    public List<ApplianceType> getApplianceTypes( ModelMap model,
+                                                  @RequestParam(value = "id") Long id ) {
+        Appointment appointment = (Appointment) model.get( "appointmentToCreate" );
+        if ( appointment == null ) {
+            appointment = getAppointment( id );
+        }
+        if ( appointment == null || appointment.getCampaign() == null ) {
+            return Collections.emptyList();
+        }
+        return appointment.getCampaign().getAvailableTypes();
+    }
 
     @InitBinder
     public void initBinder( WebDataBinder binder ) {
@@ -227,6 +240,12 @@ public class EditAppointment extends BaseController {
         //appointmentDao.deleteEntity( appointment );
         appointment.setEnabled( false );
         appointmentDao.saveEntity( appointment );
+
+        Map<String,Object> emailContext = new HashMap<>();
+        emailContext.put( "user", appointment.getUser() );
+        emailContext.put( "changedByAdmin", true );
+
+        emailService.sendEmail( appointment.getUser(), EmailType.REMOVE_APPOINTMENT, emailContext );
         return "redirect:/home.htm";
     }
 

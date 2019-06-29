@@ -229,6 +229,14 @@ public class CreateAppointment extends BaseController {
         //appointmentDao.deleteEntity( appointment );
         appointment.setEnabled( false );
         appointmentDao.saveEntity( appointment );
+
+        User user = getUser();
+        Map<String,Object> emailContext = new HashMap<>();
+        emailContext.put( "user", user );
+        emailContext.put( "changedByAdmin", false );
+
+        emailService.sendEmail( user, EmailType.REMOVE_APPOINTMENT, emailContext );
+
         return "redirect:/home.htm";
     }
 }
