@@ -31,11 +31,11 @@ public class SendSmsRemind {
 
     private Calendar reminderTime;
 
+    private static Set<Long> alreadySent =  new HashSet<>();
+
     public void sendReminders() {
         Calendar calendar = Calendar.getInstance();
         calendar.add( Calendar.DAY_OF_YEAR, 1 );
-
-        Set<Long> alreadySent =  new HashSet<>();
 
         int activation = propertyService.getPropertyAsInt( StoredPropertyName.MEGAPHONE_SMS_ENABLED );
 
@@ -54,7 +54,7 @@ public class SendSmsRemind {
                 //balancer++;
                 //if ( balancer == 3 ) {
                     try {
-                        TimeUnit.SECONDS.sleep( 10 ); // add timeout  to not exceed Megaphone max load
+                        TimeUnit.SECONDS.sleep( 5 ); // add timeout  to not exceed Megaphone max load
                     } catch (InterruptedException e) {
                         //
                     }
@@ -62,6 +62,10 @@ public class SendSmsRemind {
                 //}
             }
         }
+    }
+
+    public void clearSentQueue() {
+        alreadySent.clear();
     }
 
 }

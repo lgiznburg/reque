@@ -4,6 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <script>
 
@@ -34,7 +35,8 @@
   </form>
 
   <div class="row">
-    <div class="col-sm-10">
+    <div class="col-sm-5"><fmt:formatDate value="${testDate}" pattern="EEEE, d MMMM yyyy"/></div>
+    <div class="col-sm-7">
       <fmt:formatDate value="${testDate}" pattern="dd.MM.yyyy" var="strTestDate"/>
       <a target="_blank" class="btn btn-outline-info" href="<c:url value="/admin/DayStats.htm"><c:param name="testDate" value="${strTestDate}"/><c:param name="print" value="1"/></c:url>">Печать списка</a>
       <a target="_blank" class="btn btn-outline-info" href="<c:url value="/admin/DayStats.htm"><c:param name="testDate" value="${strTestDate}"/><c:param name="ticket" value="1"/></c:url>">Печать талонов</a>
@@ -42,18 +44,20 @@
   </div>
   <table class="table" >
     <tr>
-      <th>Дата</th>
       <c:forEach items="${types}" var="appType">
         <th>${appType.name}</th>
       </c:forEach>
+      <th>Итого</th>
     </tr>
     <c:forEach items="${stats}" var="entry">
       <tr>
-        <td align="center"><fmt:formatDate value="${entry.key}" pattern="EEE, d MMM yyyy"/></td>
         <c:set var="dayStats" value="${entry.value}"/>
+        <c:set var="total" value="0"/>
         <c:forEach items="${types}" var="appType">
           <td align="center">${dayStats[appType]}</td>
+          <c:set var="total" value="${total + dayStats[appType]}"/>
         </c:forEach>
+        <td align="center"><strong>${total}</strong></td>
       </tr>
     </c:forEach>
 
@@ -71,7 +75,12 @@
       <tr>
         <td>${indx.index+1}</td>
         <td><fmt:formatDate value="${appt.scheduledTime}" pattern="HH:mm"/></td>
-        <td>${appt.user.lastName} ${appt.user.firstName}</td>
+        <td>
+          <sec:authorize access="hasRole('ROLE_ADMIN')">
+            <a href="<c:url value="/admin/EditAppointment.htm"><c:param name="id" value="${appt.id}"/></c:url>">${appt.user.lastName} ${appt.user.firstName}</a>
+          </sec:authorize>
+            <sec:authorize access="not hasRole('ROLE_ADMIN')">${appt.user.lastName} ${appt.user.firstName}</sec:authorize>
+        </td>
         <td>${appt.type.name}</td>
         <td>${appt.onlineNumber}</td>
       </tr>

@@ -131,7 +131,7 @@
   </div>
   <div class="form-group row">
     <div class="col-sm-7">
-      <a class="btn btn-outline-success" href="<c:url value="/admin/DayStats.htm"><c:param name="testDate" value="${appointmentToCreate.scheduledDate}"/></c:url> ">Назад</a>
+      <a class="btn btn-outline-success" href="<c:url value="/admin/DayStats.htm"><c:param name="testDate" value="${appointmentToCreate.scheduledDate}"/></c:url>">Назад</a>
       <button type="submit" class="btn btn-primary">Сохранить</button>
       <c:if test="${appointmentToCreate.id > 0}">
         <button type="button" id="deleteButton" class="btn btn-outline-warning">Удалить</button>
