@@ -6,11 +6,14 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import ru.rsmu.reque.model.registration.Appointment;
+import ru.rsmu.reque.model.registration.CampaignReserveDay;
 import ru.rsmu.reque.model.system.StoredPropertyName;
 import ru.rsmu.reque.service.StoredPropertyService;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author leonid.
@@ -40,9 +43,15 @@ public class AppointmentValidator implements Validator {
         if ( !errors.hasFieldErrors( "scheduledDate" ) ) {
             Date today = new Date();
             if ( !today.before( appointment.getScheduledDate() ) || appointment.getScheduledDate().after( appointment.getCampaign().getEndDate() ) ) {
-                errors.rejectValue( "scheduledDate", "appointment.wrong_date" );
+                errors.rejectValue( "scheduledDate", "appointment.wrong_date" ); //out of boundaries
             }
             scheduledDate.setTime( appointment.getScheduledDate() );
+            for ( CampaignReserveDay reverse : appointment.getCampaign().getReserveDays() ) {
+                if ( scheduledDate.getTime().equals( reverse.getReserveDay() ) ) {
+                    errors.rejectValue( "scheduledDate", "appointment.wrong_time" ); // reserve days
+                }
+            }
+
             if ( scheduledDate.get( Calendar.DAY_OF_WEEK ) == Calendar.SUNDAY ) {
                 errors.rejectValue( "scheduledDate", "appointment.wrong_time" );
             }

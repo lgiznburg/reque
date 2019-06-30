@@ -55,7 +55,7 @@ public class ReceptionCampaign implements Serializable {
     @Column(name = "concurrent_amount")
     private int concurrentAmount = 0;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "campaign")
+    @OneToMany(/*fetch = FetchType.EAGER,*/ mappedBy = "campaign")
     private List<CampaignReserveDay> reserveDays;
 
     public ReceptionCampaign() {

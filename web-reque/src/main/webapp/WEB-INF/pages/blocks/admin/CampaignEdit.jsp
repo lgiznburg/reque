@@ -19,6 +19,9 @@
     $("#startDate").datepicker("option", $.datepicker.regional[ "ru" ]);
     $("#endDate").datepicker("option", $.datepicker.regional[ "ru" ]);
 
+    $(".reserve-day").datepicker();
+    $(".reserve-day").datepicker("option", $.datepicker.regional[ "ru" ]);
+
     var dateFormat = "dd.mm.yy";
     function getDate( element ) {
       var date;
@@ -89,8 +92,21 @@
   </div>
 
   <div class="form-group row">
+    <div class="col-sm-2 col-form-label">Резервные дни</div>
+  </div>
+    <c:forEach items="${campaign.reserveDays}" var="reserveDay" varStatus="indx">
+      <div class="form-group row">
+        <div class="col-sm-5 offset-2">
+          <form:input path="reserveDays[${indx.index}].reserveDay"   cssClass="form-control reserve-day"/>
+          <form:errors path="reserveDays[${indx.index}].reserveDay" cssClass="text-danger" element="span"/>
+        </div>
+      </div>
+    </c:forEach>
+
+
+  <div class="form-group row">
     <div class="col-sm-7">
-      <a class="btn btn-outline-success" href="<c:url value="/admin/StoredProperties.htm"/>">Назад</a>
+      <a class="btn btn-outline-success" href="<c:url value="/admin/Campaigns.htm"/>">Назад</a>
       <button type="submit" class="btn btn-primary">Сохранить</button>
     </div>
   </div>
