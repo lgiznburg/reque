@@ -1,5 +1,8 @@
 package ru.rsmu.reque.editor;
 
+import org.springframework.util.StreamUtils;
+import org.springframework.util.StringUtils;
+
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorSupport;
 import java.sql.Time;
@@ -102,6 +105,10 @@ public class DateTimeEditor extends PropertyEditorSupport implements PropertyEdi
     /** {@inheritDoc} */
     @Override
     public void setAsText(final String text) throws IllegalArgumentException {
+        if ( !StringUtils.hasText( text ) ) {
+            setValue( null );
+            return;
+        }
         for (final Map.Entry<Pattern, SimpleDateFormat> patternFormatEntry : PATTERN_FORMATS.entrySet()) {
             try {
                 final Pattern pattern = patternFormatEntry.getKey();

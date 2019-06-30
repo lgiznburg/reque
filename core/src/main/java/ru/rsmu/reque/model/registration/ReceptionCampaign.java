@@ -55,9 +55,12 @@ public class ReceptionCampaign implements Serializable {
     @Column(name = "concurrent_amount")
     private int concurrentAmount = 0;
 
+    @OneToMany(/*fetch = FetchType.EAGER,*/ mappedBy = "campaign")
+    private List<CampaignReserveDay> reserveDays;
 
     public ReceptionCampaign() {
         availableTypes = new ArrayList<>();
+        reserveDays = new ArrayList<>();
     }
 
     public long getId() {
@@ -122,5 +125,13 @@ public class ReceptionCampaign implements Serializable {
 
     public void setConcurrentAmount( int concurrentAmount ) {
         this.concurrentAmount = concurrentAmount;
+    }
+
+    public List<CampaignReserveDay> getReserveDays() {
+        return reserveDays;
+    }
+
+    public void setReserveDays( List<CampaignReserveDay> reserveDays ) {
+        this.reserveDays = reserveDays;
     }
 }

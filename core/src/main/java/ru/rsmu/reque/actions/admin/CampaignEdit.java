@@ -11,11 +11,14 @@ import ru.rsmu.reque.dao.AppointmentDao;
 import ru.rsmu.reque.dao.ReceptionCampaignDao;
 import ru.rsmu.reque.editor.ApplianceTypeEditor;
 import ru.rsmu.reque.editor.DateTimeEditor;
+import ru.rsmu.reque.model.registration.CampaignReserveDay;
 import ru.rsmu.reque.model.registration.ReceptionCampaign;
 import ru.rsmu.reque.model.system.ApplianceType;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -42,7 +45,13 @@ public class CampaignEdit extends BaseController {
         if ( id != null ) {
             campaign = campaignDao.findCampaign( id );
         }
-        return campaign != null ? campaign : new ReceptionCampaign();
+        if ( campaign == null ) {
+            campaign = new ReceptionCampaign();
+        }
+        for ( int i = 0; i < 5; i++ ) {
+            campaign.getReserveDays().add( new CampaignReserveDay() );
+        }
+        return campaign;
     }
 
     @ModelAttribute("applianceTypes")
@@ -63,7 +72,24 @@ public class CampaignEdit extends BaseController {
         if ( errors.hasErrors() ) {
             return buildModel( model );
         }
+        List<CampaignReserveDay> toDelete = new ArrayList<>();
+        for ( Iterator<CampaignReserveDay> dayIterator = campaign.getReserveDays().iterator(); dayIterator.hasNext(); ) {
+            CampaignReserveDay day = dayIterator.next();
+            if ( day.getReserveDay() != null ) {
+                day.setCampaign( campaign );
+            }
+            else {
+                dayIterator.remove();
+                if ( day.getId() > 0 ) {
+                    day.setReserveDay( new Date() );  // to prevent exception, day should not be null
+                    toDelete.add( day );
+                }
+            }
+        }
         campaignDao.saveEntity( campaign );
+        for( CampaignReserveDay day : toDelete ) {
+            campaignDao.deleteEntity( day );
+        }
         return "redirect:/admin/Campaigns.htm";
     }
 

@@ -2,6 +2,7 @@ package ru.rsmu.reque.dao;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -41,6 +42,7 @@ public abstract class CommonDao extends HibernateDaoSupport {
     @SuppressWarnings( "unchecked" )
     public  <T> List<T> findAllEntities( Class<T> entityClass ) {
         Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( entityClass );
+        criteria.setResultTransformer( CriteriaSpecification.DISTINCT_ROOT_ENTITY );
         return  criteria.list();
     }
 }

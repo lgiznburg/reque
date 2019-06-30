@@ -1,6 +1,7 @@
 package ru.rsmu.reque.dao;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,8 @@ public class ReceptionCampaignDao extends CommonDao {
     public List<ReceptionCampaign> findAvailableCampaigns( Date date ) {
         Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( ReceptionCampaign.class )
                 .add( Restrictions.gt( "endDate", date ) )
-                .add( Restrictions.eq( "active", true ) );
+                .add( Restrictions.eq( "active", true ) )
+                .setResultTransformer( CriteriaSpecification.DISTINCT_ROOT_ENTITY );
         return  criteria.list();
     }
 
@@ -35,7 +37,8 @@ public class ReceptionCampaignDao extends CommonDao {
                 .add( Restrictions.lt( "priority", campaign.getPriority() ) )
                 .add( Restrictions.ge( "endDate", date ) )
                 .add( Restrictions.eq( "active", true ) )
-                .addOrder( Order.desc( "endDate" ) );
+                .addOrder( Order.desc( "endDate" ) )
+                .setResultTransformer( CriteriaSpecification.DISTINCT_ROOT_ENTITY );
         List<ReceptionCampaign> campaigns = criteria.list();
         if ( campaigns.size() > 0 ) {
             return campaigns.get( 0 );

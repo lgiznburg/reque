@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.rsmu.reque.dao.AppointmentDao;
 import ru.rsmu.reque.dao.ReceptionCampaignDao;
 import ru.rsmu.reque.model.registration.Appointment;
+import ru.rsmu.reque.model.registration.CampaignReserveDay;
 import ru.rsmu.reque.model.registration.ReceptionCampaign;
 import ru.rsmu.reque.model.system.StoredPropertyName;
 
@@ -57,6 +58,15 @@ public class AppointmentHelper {
         }
         List<Map<String,Object>> dates = new ArrayList<>();
         while ( !calendar.getTime().after( endDate ) ) {
+            for ( CampaignReserveDay reverse : appointment.getCampaign().getReserveDays() ) {
+                if ( calendar.getTime().equals( reverse.getReserveDay() ) ) {
+                    Map<String,Object> map = new HashMap<>();
+                    map.put( "date", calendar.getTime() );
+                    map.put( "message", "Reserved" );
+                    dates.add( map );
+                }
+            }
+
             long thisDayAmount = dayAmount;
             if ( calendar.get( Calendar.DAY_OF_WEEK ) == Calendar.SATURDAY ) {
                 thisDayAmount = saturdayAmount;
