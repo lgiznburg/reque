@@ -33,7 +33,7 @@
 
 <div class="container" role="main">
 
-  <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SERVICEMAN')">
+  <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_SERVICEMAN', 'ROLE_MANAGER')">
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-2 sidebar">
@@ -46,7 +46,7 @@
     </div>
   </sec:authorize>
 
-  <sec:authorize access="not hasAnyRole('ROLE_ADMIN','ROLE_SERVICEMAN')">
+  <sec:authorize access="not hasAnyRole('ROLE_ADMIN','ROLE_SERVICEMAN', 'ROLE_MANAGER')">
     <c:import url="${content}"/>
   </sec:authorize>
 

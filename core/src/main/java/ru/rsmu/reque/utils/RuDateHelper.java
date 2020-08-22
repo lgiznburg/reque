@@ -6,6 +6,8 @@ package ru.rsmu.reque.utils;
 public class RuDateHelper {
 
     public static String genetiveDay( String date ) {
-        return date.replaceAll( "(сред|пятниц|суббот)а", "$1у" );
+        String result = date.replaceAll( "(сред|пятниц|суббот)а", "$1у" );
+        result = result.replaceAll( "в (вторник)", "во $1" );
+        return result;
     }
 }

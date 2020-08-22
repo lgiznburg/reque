@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import ru.rsmu.reque.model.registration.Appointment;
 import ru.rsmu.reque.model.system.ApplianceType;
 import ru.rsmu.reque.model.system.DocumentName;
+import ru.rsmu.reque.model.system.QueuedSms;
 import ru.rsmu.reque.model.system.User;
 
 import java.util.*;
@@ -87,11 +88,17 @@ public class AppointmentDao extends CommonDao {
         criteria.addOrder( Order.asc( "scheduledDate" ) );
         List result = criteria.list(); //query.list();
         Map<Date,Map<ApplianceType,Long>> stats = new TreeMap<>();
+        Calendar thisYear = Calendar.getInstance();
         Date current = null;
         Map<ApplianceType,Long> day = new HashMap<>();
         for ( Object object : result ) {
             Object[] row = (Object[]) object;
             Date dateRes = (Date) row[1];
+            Calendar calendarRes = Calendar.getInstance();
+            calendarRes.setTime( dateRes );
+            if ( date == null && calendarRes.get( Calendar.YEAR ) != thisYear.get( Calendar.YEAR ) ) {
+                continue;
+            }
             if ( !dateRes.equals( current ) ) {
                 if ( current != null ) {
                     stats.put( current, day );
@@ -158,5 +165,13 @@ public class AppointmentDao extends CommonDao {
         //getHibernateTemplate().initialize( appointment.getCampaign() );
         //getHibernateTemplate().initialize( appointment.getType() );
         getHibernateTemplate().initialize( appointment.getType().getDocuments() );
+    }
+
+    public List<QueuedSms> findSmsToSend() {
+        Criteria criteria = getSessionFactory().getCurrentSession().createCriteria( QueuedSms.class )
+                .add( Restrictions.eq( "send", false ) )
+                .add( Restrictions.eq( "error", false ) )
+                .setMaxResults( 40 );
+        return criteria.list();
     }
 }

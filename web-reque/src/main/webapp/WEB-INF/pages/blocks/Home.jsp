@@ -11,14 +11,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<h2>Электронная запись на прием документов.</h2>
-<p class="text-info"><strong>Уважаемые абитуриенты!</strong></p>
-<p>Приемная комиссия стремится сделать подачу заявления на поступление в наш университет как можно более простой и удобной.
-  Мы хотим, чтобы Вы тратили как можно меньше времени на ожидание, поэтому мы принимаем заявления только по предварительной
-записи.</p>
+<h2><spring:message code="home.title"/></h2>
+<p class="text-info"><strong><spring:message code="home.greeting"/> </strong></p>
+<p><spring:message code="home.goal_text"/></p>
 
 <c:if test="${empty appointment}">
+<%--
   <div class="row">
     <div class="col p-2">
       <span class="text-info">Рекомендация:</span> для ускорения подачи Вашего заявления предварительно заполните электронную форму
@@ -41,43 +41,43 @@
       запомните <em>номер заявления</em> и используйте этот номер при назначении даты и времени посещения приемной комиссии.
     </div>
   </div>
+--%>
+  ${announce}
 </c:if>
 
   <sec:authorize access="isAnonymous()">
     <div class="row">
       <div class="col p-2">
-        Для записи в очередь для подачи заявления необходимо
+        <spring:message code="home.appointment_requirement"/>
       </div>
     </div>
     <div class="row justify-content-center">
       <div class="col-auto p-2">
-        <a class="btn btn-primary" href="<c:url value="Registration.htm"/> ">зарегистрироваться</a>
+        <a class="btn btn-primary" href="<c:url value="Registration.htm"/> "><spring:message code="basic.register"/> </a>
       </div>
     </div>
     <div class="row">
       <div class="col p-2">
-        После этого Вы сможете выбрать день и время посещения из доступных на текущий момент.
-        Позже Вы сможете перенести Вашу записть на другое время.
+        <spring:message code="home.after_signup"/>
       </div>
     </div>
   </sec:authorize>
   <sec:authorize access="hasAnyRole('ROLE_CLIENT','ROLE_ADMIN')">
     <c:choose>
       <c:when test="${empty appointment}">
-        <p><span  class="text-info"><strong>Внимание! Запись в очередь еще не закончена!</strong></span> Не забудьте </p>
+        <p><span  class="text-info"><strong><spring:message code="home.attention"/> </strong></span></p>
 
         <div class="row justify-content-center">
           <div class="col-auto p-2">
-            <a class="btn btn-primary"  href="<c:url value="SelectCampaign.htm"/> ">Назначить дату и время</a>
+            <a class="btn btn-primary"  href="<c:url value="SelectCampaign.htm"/> "><spring:message code="basic.set_appointment"/> </a>
           </div>
         </div>
       </c:when>
       <c:otherwise>
         <div class="row">
           <div class="col p-2">
-            <p>Мы Вас ожидаем в<c:if test="${fn:contains(fullDate, 'вторник')}">о</c:if>  <strong>${fullDate}</strong> <%-- <fmt:formatDate value="${appointment.scheduledDate}" pattern="EEEE, dd MMMM"/>--%>
-              в <strong><fmt:formatDate value="${appointment.scheduledTime}" pattern="HH:mm"/></strong>. </p>
-            <p>Вам необходимо предоставить следующие документы:
+            <p>${awaiting_msg}</p>
+            <p><spring:message code="home.provide_docs"/>
             <ul>
               <c:forEach items="${appointment.type.documents}" var="document"><li>${document.name}</li></c:forEach>
             </ul>
@@ -86,7 +86,7 @@
         </div>
         <div class="row justify-content-center">
           <div class="col-auto p-2">
-            <a class="btn btn-primary" href="<c:url value="/CreateAppointment.htm"><c:param name="id" value="${appointment.id}"/></c:url>">изменить Вашу запись</a>
+            <a class="btn btn-primary" href="<c:url value="/CreateAppointment.htm"><c:param name="id" value="${appointment.id}"/></c:url>"><spring:message code="basic.change_appointment"/> </a>
           </div>
         </div>
       </c:otherwise>

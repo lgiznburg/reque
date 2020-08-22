@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Вход</title>
+  <title><spring:message code="login.title"/> </title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -57,7 +58,7 @@
   <form name='loginForm'
         action="<c:url value='/j_spring_security_check' />" method='POST' class="form-signin">
 
-    <h4 class="form-signin-heading">Пожалуйста, используйте Ваш email и пароль</h4>
+    <h4 class="form-signin-heading"><spring:message code="login.greeting"/></h4>
 
     <c:if test="${not empty error}">
       <div class="form-text text-danger">${error}</div>
@@ -70,13 +71,13 @@
       <input type='text' id="j_username" name='j_username' value='' class="form-control" placeholder="Email address">
     </div>
     <div class="form-group">
-      <input type='password' id="j_password" name='j_password'  class="form-control" placeholder="Пароль"/>
+      <input type='password' id="j_password" name='j_password'  class="form-control" placeholder="<spring:message code="edit_password.pasword"/>"/>
     </div>
     <div class="form-group">
       <button class="btn btn-primary" type="submit">Войти</button>
     </div>
 
-    <div class="form-group"><a href="<c:url value="/RemindPassword.htm"/>">Забыли пароль?</a> </div>
+    <div class="form-group"><a href="<c:url value="/RemindPassword.htm"/>"><spring:message code="login.foget_password"/> </a> </div>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
   </form>

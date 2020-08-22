@@ -23,7 +23,17 @@
     </bean>
     <mvc:interceptors>
         <ref bean="openSessionInViewInterceptor"/>
+        <ref bean="localeChangeInterceptor"/>
     </mvc:interceptors>
+
+    <bean id="localeResolver"
+          class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <property name="defaultLocale" value="ru"/>
+    </bean>
+    <bean id="localeChangeInterceptor"
+          class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="lang" />
+    </bean>
 
     <mvc:view-resolvers>
         <mvc:jsp prefix="/WEB-INF/pages" suffix=".jsp" view-class="org.springframework.web.servlet.view.JstlView"/>
@@ -108,6 +118,18 @@
         <property name="cronExpression" value="0 0 9 * * ?" />
     </bean>
 
+    <!-- send sms from queue (stored in the db-->
+    <bean id="smsForQueue" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="sendSmsFromQueue"/>
+        <property name="targetMethod" value="sendReminders"/>
+    </bean>
+
+    <bean id="smsForQueueTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="smsReminderPrepare"/>
+        <!-- run every minute -->
+        <property name="cronExpression" value="0 0/1 * * * ?" />
+    </bean>
+
     <bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <!--<property name="jobDetails">
             <list>
@@ -120,6 +142,7 @@
                 <ref bean="sendReminderTrigger"/>
                 <ref bean="sendSmsReminderTrigger"/>
                 <ref bean="sendSmsReminderPrepareTrigger"/>
+                <ref bean="smsForQueueTrigger"/>
             </list>
         </property>
     </bean>

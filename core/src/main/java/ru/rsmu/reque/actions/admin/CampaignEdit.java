@@ -77,6 +77,9 @@ public class CampaignEdit extends BaseController {
             CampaignReserveDay day = dayIterator.next();
             if ( day.getReserveDay() != null ) {
                 day.setCampaign( campaign );
+                if ( !day.getWorkingTime().matches( CampaignReserveDay.WORKING_TIME_REGEXP ) ) {
+                    day.setWorkingTime( null ); // error message ??
+                }
             }
             else {
                 dayIterator.remove();
@@ -90,7 +93,12 @@ public class CampaignEdit extends BaseController {
         for( CampaignReserveDay day : toDelete ) {
             campaignDao.deleteEntity( day );
         }
-        return "redirect:/admin/Campaigns.htm";
+        for ( CampaignReserveDay day : campaign.getReserveDays() ) {
+            campaignDao.saveEntity( day );
+        }
+        //return "redirect:/admin/Campaigns.htm";
+        model.addAttribute( "campaign", getCampaign( campaign.getId() ) );
+        return buildModel( model );
     }
 
     @InitBinder

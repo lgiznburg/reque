@@ -58,24 +58,37 @@ public class AppointmentHelper {
         }
         List<Map<String,Object>> dates = new ArrayList<>();
         while ( !calendar.getTime().after( endDate ) ) {
+            CampaignReserveDay reserveDay = null;
             for ( CampaignReserveDay reverse : appointment.getCampaign().getReserveDays() ) {
                 if ( calendar.getTime().equals( reverse.getReserveDay() ) ) {
-                    Map<String,Object> map = new HashMap<>();
+                    /*Map<String,Object> map = new HashMap<>();
                     map.put( "date", calendar.getTime() );
                     map.put( "message", "Reserved" );
-                    dates.add( map );
+                    dates.add( map );*/
+                    reserveDay = reverse;
+                    break;
                 }
             }
 
             long thisDayAmount = dayAmount;
-            if ( calendar.get( Calendar.DAY_OF_WEEK ) == Calendar.SATURDAY ) {
-                thisDayAmount = saturdayAmount;
-            }
-            if ( appointment.getCampaign().getPriority() > 0 && concurrentCampaign != null
-                    && !calendar.getTime().after( concurrentCampaign.getEndDate() ) ) {
-                thisDayAmount = concurrentDayAmount;
+            if ( reserveDay != null ) {
+                if ( appointment.getCampaign().getPriority() > 0 && concurrentCampaign != null
+                        && !calendar.getTime().after( concurrentCampaign.getEndDate() ) ) {
+                    thisDayAmount = reserveDay.getDayAmount( appointment.getCampaign().getConcurrentAmount(), granularity );
+                }
+                else {
+                    thisDayAmount = reserveDay.getDayAmount( amount, granularity );
+                }
+            } else {
                 if ( calendar.get( Calendar.DAY_OF_WEEK ) == Calendar.SATURDAY ) {
-                    thisDayAmount = concurrentSaturdayAmount;
+                    thisDayAmount = saturdayAmount;
+                }
+                if ( appointment.getCampaign().getPriority() > 0 && concurrentCampaign != null
+                        && !calendar.getTime().after( concurrentCampaign.getEndDate() ) ) {
+                    thisDayAmount = concurrentDayAmount;
+                    if ( calendar.get( Calendar.DAY_OF_WEEK ) == Calendar.SATURDAY ) {
+                        thisDayAmount = concurrentSaturdayAmount;
+                    }
                 }
             }
             if ( calendar.get( Calendar.DAY_OF_WEEK ) == Calendar.SUNDAY
@@ -86,7 +99,10 @@ public class AppointmentHelper {
                 map.put( "message", "Weekend" );
                 dates.add( map );
             }
-            else if ( countByDates.get( calendar.getTime() ) != null && countByDates.get( calendar.getTime() ) >= thisDayAmount ) {
+            else if ( thisDayAmount == 0 ||
+                    ( countByDates.get( calendar.getTime() ) != null &&
+                            countByDates.get( calendar.getTime() ) >= thisDayAmount )
+            ) {
                 Map<String,Object> map = new HashMap<>();
                 map.put( "date", calendar.getTime() );
                 map.put( "message", "Not available" );
@@ -103,7 +119,9 @@ public class AppointmentHelper {
         if ( concurrent!= null && campaign.getPriority() > 0 ) {
             amount = campaign.getConcurrentAmount();
         }
-        return calculateTimes( date, amount, campaign.getPriority() );
+        List<List<String>> result = getReserveDaysTimes( date, campaign );
+        result.addAll( calculateTimes( date, amount, campaign.getPriority() ));
+        return result;
     }
 
     public List<List<String>> getTodayTimes( Date date, ReceptionCampaign campaign   ) {
@@ -113,7 +131,34 @@ public class AppointmentHelper {
             amount = campaign.getConcurrentAmount();
         }
         int addAmount = propertyService.getPropertyAsInt( StoredPropertyName.SCHEDULE_ADMIN_ADD_AMOUNT );
-        return calculateTimes( date, amount + addAmount, campaign.getPriority() );
+        List<List<String>> result = getReserveDaysTimes( date, campaign );
+        result.addAll( calculateTimes( date, amount + addAmount, campaign.getPriority() ));
+        return result;
+    }
+
+    private List<List<String>> getReserveDaysTimes( Date date, ReceptionCampaign campaign ) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime( date );
+        calendar.set( Calendar.HOUR_OF_DAY, 0 );
+        calendar.set( Calendar.MINUTE, 0 );
+        calendar.set( Calendar.SECOND, 0 );
+        calendar.set( Calendar.MILLISECOND, 0 );
+        Date startTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_START_TIME );
+        Date endTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_END_TIME );
+        if ( calendar.get( Calendar.DAY_OF_WEEK ) == Calendar.SATURDAY ) {
+            endTime = propertyService.getPropertyAsDate( StoredPropertyName.SCHEDULE_SATURDAY_END_TIME );
+        }
+        CampaignReserveDay reserveDay = null;
+        for ( CampaignReserveDay reverse : campaign.getReserveDays() ) {
+            if ( calendar.getTime().equals( reverse.getReserveDay() ) ) {
+                reserveDay = reverse;
+                break;
+            }
+        }
+        if ( reserveDay != null ) {
+            return reserveDay.getNotWorkingTime( startTime, endTime );
+        }
+        return new ArrayList<>();
     }
 
     private List<List<String>> calculateTimes( Date date, long amount, int priority ) {

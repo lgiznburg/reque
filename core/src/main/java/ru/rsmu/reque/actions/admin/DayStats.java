@@ -42,7 +42,7 @@ public class DayStats extends BaseController {
 
     private Date getNextDay() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add( Calendar.DAY_OF_YEAR, 1 );
+        //calendar.add( Calendar.DAY_OF_YEAR, 1 );
 
         return calendar.getTime();
     }

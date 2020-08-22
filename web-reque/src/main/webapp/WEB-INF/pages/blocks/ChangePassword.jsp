@@ -6,7 +6,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 
-<h2>Изменение пароля</h2>
+<h2><spring:message code="edit_password.title"/></h2>
 
 <form:form commandName="userToReg" name="user" method="post" action="ChangePassword.htm" >
     <c:if test="${not empty param.key}"><input type="hidden" name="key" value="${param.key}"> </c:if>
@@ -15,14 +15,14 @@
 --%>
 
   <div class="form-group row">
-    <form:label path="password" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Пароль <sup>*</sup></form:label>
+    <form:label path="password" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger"><spring:message code="edit_password.pasword"/> <sup>*</sup></form:label>
     <div class="col-sm-5">
       <form:password path="password" cssClass="form-control"/>
       <form:errors path="password" element="span" cssClass="text-danger" />
     </div>
   </div>
   <div class="form-group row">
-    <form:label path="passwordConfirmation" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Подтверждение пароля <sup>*</sup></form:label>
+    <form:label path="passwordConfirmation" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger"><spring:message code="edit_password.confirm"/> <sup>*</sup></form:label>
     <div class="col-sm-5">
       <form:password path="passwordConfirmation" cssClass="form-control" />
       <form:errors path="passwordConfirmation" element="span" cssClass="text-danger" />
@@ -31,8 +31,8 @@
 
   <div class="form-group row">
     <div class="col-sm-5">
-      <a class="btn btn-outline-success" href="<c:url value="/home.htm"/>">Назад</a>
-      <button type="submit" class="btn btn-primary">Сохранить</button>
+      <a class="btn btn-outline-success" href="<c:url value="/home.htm"/>"><spring:message code="basic.cancel"/></a>
+      <button type="submit" class="btn btn-primary"><spring:message code="basic.save"/></button>
     </div>
   </div>
 </form:form>

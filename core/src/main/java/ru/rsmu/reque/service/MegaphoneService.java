@@ -1,6 +1,9 @@
 package ru.rsmu.reque.service;
 
 import com.google.gson.*;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import org.apache.commons.mail.EmailException;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -48,8 +51,14 @@ public class MegaphoneService {
     public String sendSms( Appointment appointment ) {
         MegaphoneMessage message = new MegaphoneMessage();
         try {
-            message.setTo( Long.parseLong( appointment.getUser().getPhoneNumber().replaceAll( "\\D", "" ) ) );
-        } catch (NumberFormatException e) {
+            PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+            Phonenumber.PhoneNumber phone = phoneNumberUtil.parse( appointment.getUser().getPhoneNumber(), "RU" );
+            if ( !phoneNumberUtil.isValidNumber( phone ) ) {
+                return null; //wrong number
+            }
+            String phoneNumber = phoneNumberUtil.format( phone, PhoneNumberUtil.PhoneNumberFormat.E164 );
+            message.setTo( Long.parseLong( phoneNumber.replaceAll( "\\D", "" ) ) );
+        } catch (NumberFormatException | NumberParseException e) {
             return null;  // cant send sms, wrong phone
         }
 

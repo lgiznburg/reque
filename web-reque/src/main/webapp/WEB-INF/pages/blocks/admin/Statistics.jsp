@@ -9,9 +9,11 @@
   <table class="table" >
     <tr>
       <th>Date</th>
-      <c:forEach items="${types}" var="appType">
+      <th>Данные</th>
+      <th>Итого</th>
+      <%--<c:forEach items="${types}" var="appType">
         <th>${appType.name}</th>
-      </c:forEach>
+      </c:forEach>--%>
     </tr>
     <c:forEach items="${stats}" var="entry">
       <tr>
@@ -20,10 +22,17 @@
             <fmt:formatDate value="${entry.key}" pattern="EEE, d MMM yyyy"/>
           </a>
         </td>
+        <c:set var="total" value="0"/>
         <c:set var="dayStats" value="${entry.value}"/>
-        <c:forEach items="${types}" var="appType">
-          <td align="center">${dayStats[appType]}</td>
-        </c:forEach>
+        <td align="center">
+          <c:forEach items="${types}" var="appType">
+            <c:if test="${not empty dayStats[appType]}">
+              ${appType.name} - <strong>${dayStats[appType]}</strong>,
+              <c:set var="total" value="${total + dayStats[appType]}"/>
+            </c:if>
+          </c:forEach>
+        </td>
+        <td align="center"><strong>${total}</strong></td>
       </tr>
     </c:forEach>
 

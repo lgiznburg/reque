@@ -43,19 +43,23 @@
     </div>
   </div>
   <table class="table" >
-    <tr>
-      <c:forEach items="${types}" var="appType">
-        <th>${appType.name}</th>
-      </c:forEach>
-      <th>Итого</th>
-    </tr>
     <c:forEach items="${stats}" var="entry">
+      <c:set var="dayStats" value="${entry.value}"/>
+      <c:set var="total" value="0"/>
       <tr>
-        <c:set var="dayStats" value="${entry.value}"/>
-        <c:set var="total" value="0"/>
         <c:forEach items="${types}" var="appType">
-          <td align="center">${dayStats[appType]}</td>
-          <c:set var="total" value="${total + dayStats[appType]}"/>
+          <c:if test="${not empty dayStats[appType]}">
+            <th>${appType.name}</th>
+          </c:if>
+        </c:forEach>
+        <th>Итого</th>
+      </tr>
+      <tr>
+        <c:forEach items="${types}" var="appType">
+          <c:if test="${not empty dayStats[appType]}">
+            <td align="center">${dayStats[appType]}</td>
+            <c:set var="total" value="${total + dayStats[appType]}"/>
+          </c:if>
         </c:forEach>
         <td align="center"><strong>${total}</strong></td>
       </tr>

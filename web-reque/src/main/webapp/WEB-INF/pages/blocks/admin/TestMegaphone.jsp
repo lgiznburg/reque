@@ -8,22 +8,33 @@
 
 <h2>Test SMS</h2>
 
-<c:if test="${not empty jsonResponse}"><p class="text-info">${jsonResponse}</p></c:if>
+<%--<c:if test="${not empty jsonResponse}"><p class="text-info">${jsonResponse}</p></c:if>--%>
+<c:if test="${not empty resultMsgs}">
+  <p class="text-info">
+  <c:forEach items="${resultMsgs}" var="message">${message}<br/></c:forEach>
+  </p>
+</c:if>
 
-<form action="<c:url value="/admin/TestMegaphone.htm"/>" method="post">
+<form action="<c:url value="/admin/SendSms.htm"/>" method="post" enctype="multipart/form-data">
   <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
   <div class="form-group row">
     <label for="phoneNumber" class="col-sm-2 col-form-label">Телефонный номер</label>
     <div class="col-sm-5">
-      <input id="phoneNumber" name="phoneNumber" class="form-control"/>
+      <textarea id="phoneNumber" name="phoneNumber" class="form-control" rows="15"></textarea>
       <c:if test="${not empty phoneNumberMsg}"><span class="text-danger">${phoneNumberMsg}</span></c:if>
     </div>
   </div>
   <div class="form-group row">
-    <label for="text" class="col-sm-2 col-form-label" >Название</label>
+    <label for="phonesFile" class="col-sm-2 col-form-label">Select a file:</label>
     <div class="col-sm-5">
-      <textarea id="text" name="text" class="form-control"></textarea>
+        <input id="phonesFile" type="file" name="phonesListFile" class="form-control-file"/>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="text" class="col-sm-2 col-form-label" >Текст SMS</label>
+    <div class="col-sm-5">
+      <textarea id="text" name="text" class="form-control" rows="15"></textarea>
     </div>
   </div>
 

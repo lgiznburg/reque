@@ -4,8 +4,9 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-  <h2>Выберите цель обращения</h2>
+  <h2><spring:message code="select_campaign.goal"/></h2>
   <ul>
     <c:forEach var="campaign" items="${campaigns}">
         <li><a class="btn" href="<c:url value="/CreateAppointment.htm"><c:param name="campaign" value="${campaign.id}"/></c:url>">${campaign.name}
@@ -13,6 +14,5 @@
     </c:forEach>
   </ul>
 <c:if test="${empty campaigns}">
-  <p>В данный момент предварительная запись не проводится. Пожалуйста,
-    следите за объявлениями на <a href="http://rsmu.ru/abitur1.html">нашем сайте</a>.</p>
+  <p><spring:message code="select_campaign.no_campaign"/> <a href="http://rsmu.ru/abitur1.html"><spring:message code="basic.our_site"/></a>.</p>
 </c:if>

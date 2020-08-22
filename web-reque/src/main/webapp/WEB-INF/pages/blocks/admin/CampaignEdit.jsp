@@ -100,6 +100,10 @@
           <form:input path="reserveDays[${indx.index}].reserveDay"   cssClass="form-control reserve-day"/>
           <form:errors path="reserveDays[${indx.index}].reserveDay" cssClass="text-danger" element="span"/>
         </div>
+        <div class="col-sm-5">
+          <form:input path="reserveDays[${indx.index}].workingTime"   cssClass="form-control reserve-working_time"/>
+          <form:errors path="reserveDays[${indx.index}].workingTime" cssClass="text-danger" element="span"/>
+        </div>
       </div>
     </c:forEach>
 

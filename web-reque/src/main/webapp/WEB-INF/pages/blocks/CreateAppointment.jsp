@@ -105,43 +105,50 @@
 
 </script>
 
-<h2>Предварительная запись</h2>
+<h2><spring:message code="appointment.title"/></h2>
 
 <form:form commandName="appointmentToCreate" name="appointment" method="post" action="CreateAppointment.htm">
   <form:hidden path="id"/>
   <form:hidden path="campaign"/>
   <div class="form-group row">
-    <form:label path="onlineNumber" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Номер онлайн-заявления или Последние 4 цифры номера паспорта<sup>*</sup></form:label>
+    <form:label path="onlineNumber" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger"><spring:message code="appointment.online_number"/> <sup>*</sup></form:label>
     <div class="col-sm-5">
       <form:input path="onlineNumber"  cssClass="form-control"/>
       <form:errors path="onlineNumber" element="span" cssClass="text-danger" />
     </div>
+    <div class="col-sm-5 small text-info">
+      <p><spring:message code="appointment.online_number_info"/></p>
+    </div>
   </div>
+<%--
   <div class="row">
     <div class="col-sm-5 offset-2 small text-info">
-      <p>Для ускорения подачи Вашего заявления рекомендуем заполнить электронную форму <a href="https://reg1.rsmu.ru" target="_blank">для поступающих на 1-ый курс</a>,
+      &lt;%&ndash;<p>Для ускорения подачи Вашего заявления рекомендуем заполнить электронную форму <a href="https://reg1.rsmu.ru" target="_blank">для поступающих на 1-ый курс</a>,
         <a href="https://regmst.rsmu.ru" target="_blank">для поступающих в магистратуру</a>
         или <a href="https://regkvk.rsmu.ru" target="_blank">для поступающих в ординатуру</a>.</p>
-      <p>Номер этого онлайн-заявления необходимо указать в предыдущем поле.</p>
+      <p>Номер этого онлайн-заявления необходимо указать в предыдущем поле.</p>&ndash;%&gt;
+      <p>В данном поле неоходимо указать номер онлайн-заявления, которое Вы должны были заполнить на сервисе подачи онлайн-заявления.
+        Ссылки на этот сервис находятся на официальном сайте Университета, а также на предыдущей странице.</p>
       <p>Если Вы по каким-то причинам не желаете заполнять онлайн форму, введите последние 4 цифры номера Вашего паспорта.</p>
     </div>
   </div>
+--%>
   <div class="form-group row">
-    <form:label path="type" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Тип заявления <sup>*</sup></form:label>
+    <form:label path="type" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger"><spring:message code="appointment.application_type"/> <sup>*</sup></form:label>
     <div class="col-sm-5">
       <form:select path="type" items="${applianceTypes}" itemLabel="description" itemValue="id"   cssClass="form-control"/>
       <form:errors path="type" element="span" cssClass="text-danger"/>
     </div>
   </div>
   <div class="form-group row">
-    <form:label path="scheduledDate" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Дата <sup>*</sup></form:label>
+    <form:label path="scheduledDate" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger"><spring:message code="appointment.date"/> <sup>*</sup></form:label>
     <div class="col-sm-5">
       <form:input path="scheduledDate"   cssClass="form-control"/>
       <form:errors path="scheduledDate" element="span" cssClass="text-danger"/>
     </div>
   </div>
   <div class="form-group row">
-    <form:label path="scheduledTime" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger">Время <sup>*</sup></form:label>
+    <form:label path="scheduledTime" cssClass="col-sm-2 col-form-label" cssErrorClass="col-sm-2 col-form-label text-danger"><spring:message code="appointment.time"/> <sup>*</sup></form:label>
     <div class="col-sm-5">
       <form:input path="scheduledTime"  cssClass="form-control" />
       <form:errors path="scheduledTime" element="span" cssClass="text-danger"/>
@@ -149,11 +156,11 @@
   </div>
   <div class="form-group row">
     <div class="col-sm-7">
-      <a class="btn btn-outline-success" href="<c:url value="/home.htm"/>">Назад</a>
-      <button type="submit" class="btn btn-primary">Сохранить</button>
+      <a class="btn btn-outline-success" href="<c:url value="/home.htm"/>"><spring:message code="basic.cancel"/></a>
+      <button type="submit" class="btn btn-primary"><spring:message code="basic.save"/></button>
       <c:if test="${appointmentToCreate.id > 0}">
-        <button type="button" id="deleteButton" class="btn btn-outline-warning">Удалить</button>
-        <div id="sureDialog">Ваша запись будет удалена. Вы уверены?</div>
+        <button type="button" id="deleteButton" class="btn btn-outline-warning"><spring:message code="basic.delete"/></button>
+        <div id="sureDialog"><spring:message code="basic.delete_confirm"/> </div>
       </c:if>
     </div>
   </div>
